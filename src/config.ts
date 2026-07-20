@@ -37,7 +37,7 @@ export const EVENT = {
   tagline: '40년의 추억을 담은, 하나의 향수',
 
   // 날짜/시간
-  dateLabel: '2025년 8월 22일 (토)',
+  dateLabel: '2026년 8월 22일 (토)',
   timeLabel: '오후 6:00 (PM 18:00)',
   doorsLabel: '오후 5:00 입장 시작',
 
