@@ -1,0 +1,154 @@
+@import 'tailwindcss';
+
+/* ------------------------------------------------------------------ */
+/*  Woori 40th — 디자인 토큰                                            */
+/*  컨셉: 40년의 추억을 담은 하나의 향수                                  */
+/*  탑(아쿠아/민트) → 미들(라떼) → 베이스(앰버/우디)로 깊어지는 팔레트     */
+/* ------------------------------------------------------------------ */
+@theme {
+  /* 베이스 노트 — 오래된 선배들의 추억 (우디하고 묵직한 잔향) */
+  --color-ink: #1c120c;
+  --color-cocoa: #2f1d13;
+  --color-espresso: #422a19;
+
+  /* 미들 노트 — 중간 기수 (깊고 은은하게 이어주는 중심) */
+  --color-latte: #8a6a4c;
+  --color-sand: #c9a97e;
+  --color-cream: #f6e6c8;
+
+  /* 탑 노트 — 신세대 기수 (산뜻하고 프레쉬한 첫인상) */
+  --color-aqua: #e6f2f0;
+  --color-mist: #f4f8f7;
+
+  /* 포인트 컬러 */
+  --color-mint: #6fc4b8;
+  --color-mintdeep: #3f9c90;
+  --color-gold: #e6b45a;
+  --color-golddeep: #c9922f;
+
+  /* 폰트 */
+  --font-display: 'Cormorant', 'Nanum Myeongjo', ui-serif, Georgia, serif;
+  --font-serif: 'Nanum Myeongjo', 'Cormorant', ui-serif, Georgia, serif;
+  --font-sans: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont,
+    system-ui, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', Roboto, sans-serif;
+
+  /* 부드러운 등장 애니메이션 */
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-shimmer: shimmer 3.5s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) translateX(0);
+  }
+  50% {
+    transform: translateY(-14px) translateX(6px);
+  }
+}
+
+@keyframes shimmer {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  기본 스타일                                                         */
+/* ------------------------------------------------------------------ */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    color: var(--color-ink);
+    background-color: var(--color-mist);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  /* 제목 기본 세리프 */
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-serif);
+    letter-spacing: -0.01em;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--color-mint) 45%, transparent);
+    color: var(--color-ink);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  유틸 · 헬퍼                                                         */
+/* ------------------------------------------------------------------ */
+@layer utilities {
+  /* 스크롤 등장 (fade + rise) */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+      opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* 영문 디스플레이 제목 */
+  .font-en {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+
+  /* 은은한 빛번짐(향이 퍼지는) 원형 광원 */
+  .aura {
+    border-radius: 9999px;
+    filter: blur(60px);
+    pointer-events: none;
+  }
+
+  /* 고급스러운 골드 그라데이션 텍스트 */
+  .text-gold-gradient {
+    background: linear-gradient(120deg, #f3d999 0%, var(--color-gold) 45%, #b9821f 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* 앵커 스크롤 시 상단 고정바에 가리지 않도록 */
+  .anchor-offset {
+    scroll-margin-top: 72px;
+  }
+}
+
+/* 움직임 최소화를 선호하는 사용자 배려 */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

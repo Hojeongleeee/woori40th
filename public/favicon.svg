@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e6f2f0"/>
+      <stop offset="0.5" stop-color="#c9a97e"/>
+      <stop offset="1" stop-color="#8a6a4c"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#1c120c"/>
+  <!-- 향수병 -->
+  <rect x="26" y="10" width="12" height="7" rx="2" fill="#6fc4b8"/>
+  <rect x="29" y="6" width="6" height="5" rx="1.5" fill="#e6b45a"/>
+  <path d="M22 22c0-2.8 2.2-5 5-5h10c2.8 0 5 2.2 5 5v22c0 4.4-3.6 8-8 8h-4c-4.4 0-8-3.6-8-8V22z" fill="url(#g)"/>
+  <text x="32" y="43" font-family="Georgia, serif" font-size="15" font-style="italic" fill="#1c120c" text-anchor="middle">40</text>
+</svg>
