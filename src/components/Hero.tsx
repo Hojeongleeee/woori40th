@@ -20,7 +20,7 @@ export default function Hero() {
         {/* 킥커 */}
         <p className="mb-6 flex items-center gap-3 text-[0.7rem] font-medium uppercase tracking-[0.35em] text-latte">
           <span className="h-px w-6 bg-latte/50" />
-          Est. 1985 · 40th Anniversary
+          Est. 1986 · 40th Anniversary
           <span className="h-px w-6 bg-latte/50" />
         </p>
 

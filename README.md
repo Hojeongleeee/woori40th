@@ -43,7 +43,7 @@ npm run typecheck
 
 ```ts
 export const GALLERY_IMAGES: GalleryImage[] = [
-  { src: '/gallery/1985-first-stage.jpg', caption: '1기 첫 무대, 1985' },
+  { src: '/gallery/1986-first-stage.jpg', caption: '1기 첫 무대, 1986' },
   { src: '/gallery/mt-2003.jpg', caption: 'MT의 밤, 2003' },
 ]
 ```

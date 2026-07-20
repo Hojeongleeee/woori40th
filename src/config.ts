@@ -129,7 +129,7 @@ export const CORNERS = [
 export type GalleryImage = { src: string; caption?: string }
 
 export const GALLERY_IMAGES: GalleryImage[] = [
-  // 예시) { src: '/gallery/1985-first-stage.jpg', caption: '1기 첫 무대, 1985' },
+  // 예시) { src: '/gallery/1986-first-stage.jpg', caption: '1기 첫 무대, 1986' },
   // 예시) { src: '/gallery/mt-2003.jpg', caption: 'MT의 밤, 2003' },
 ]
 
