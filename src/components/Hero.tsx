@@ -1,76 +1,115 @@
-import type { ReactNode } from 'react'
-import { EVENT } from '../config'
-import { ArrowDownIcon } from './Icons'
+import { EVENT, PROJECT } from '../config'
+import { ArrowDownIcon, CalendarIcon, ClockIcon, MapPinIcon } from './Icons'
+import Halftone from './Halftone'
 
 /**
- * 히어로 — 탑노트(산뜻한 아쿠아). 40th 창립제의 첫 인상.
+ * 히어로 — Woori 40th Homecoming Party - <Scent of Memory>.
+ * 산뜻한 탑노트(아쿠아/민트)로 프로젝트 전체를 여는 첫 인상.
  */
 export default function Hero() {
   return (
     <section
       id="top"
-      className="relative flex min-h-[100svh] flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-mist via-aqua to-[#dcebe8] px-6 pt-20 pb-16 text-center"
+      className="relative flex min-h-[100svh] flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-mist via-aqua to-cream px-6 pt-24 pb-16 text-center"
     >
-      {/* 향이 퍼지는 듯한 은은한 광원 */}
-      <div className="aura absolute -top-24 -left-16 h-72 w-72 animate-[float_9s_ease-in-out_infinite] bg-mint/25" />
-      <div className="aura absolute top-1/3 -right-20 h-80 w-80 animate-[float_11s_ease-in-out_infinite] bg-gold/20" />
-      <div className="aura absolute bottom-0 left-1/4 h-64 w-64 bg-cream/50" />
+      {/* 하프톤 도트 블룸 (탑노트 골드) */}
+      <Halftone colorClass="text-gold" opacity={0.5} variant="bloom" />
+
+      {/* 음악 동호회 무드 — 흐릿한 기타 실루엣 (은은한 배경) */}
+      <svg
+        aria-hidden
+        viewBox="0 0 200 380"
+        className="pointer-events-none absolute right-[-2.5rem] top-1/2 z-0 h-[118%] w-auto -translate-y-1/2 rotate-[15deg] text-espresso/[0.07] blur-[2px] sm:right-2"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <rect x="88" y="14" width="24" height="30" rx="6" />
+        <path d="M84 22h6M84 30h6M110 22h6M110 30h6" />
+        <path d="M94 44v106M106 44v106" />
+        <path d="M100 150 C130 150 151 176 149 202 C148 220 132 230 132 242 C132 260 153 274 153 298 C153 328 129 346 100 346 C71 346 47 328 47 298 C47 274 68 260 68 242 C68 230 52 220 51 202 C49 176 70 150 100 150 Z" />
+        <circle cx="100" cy="250" r="22" />
+        <path d="M96 150v152M100 150v152M104 150v152" />
+        <path d="M86 292h28" />
+      </svg>
 
       <div className="relative z-10 flex flex-col items-center">
         {/* 킥커 */}
-        <p className="mb-6 flex items-center gap-3 text-[0.7rem] font-medium uppercase tracking-[0.35em] text-latte">
-          <span className="h-px w-6 bg-latte/50" />
-          Est. 1986 · 40th Anniversary
-          <span className="h-px w-6 bg-latte/50" />
+        <p className="mb-8 flex items-center gap-3 text-xs font-medium uppercase tracking-[0.42em] text-latte">
+          <span className="h-px w-7 bg-latte/40" />
+          {PROJECT.project}
+          <span className="h-px w-7 bg-latte/40" />
         </p>
 
-        {/* 메인 타이틀 */}
-        <h1 className="font-en text-6xl leading-[0.95] text-ink sm:text-7xl md:text-8xl">
-          Woori
-          <span className="block text-gold-gradient italic">40th</span>
+        {/* 메인 타이틀 — Scent of Memory */}
+        <h1 className="font-en text-ink">
+          <span className="block text-[3.4rem] font-normal italic leading-[0.9] sm:text-7xl md:text-8xl">
+            Scent
+          </span>
+          <span className="mt-1 block text-[2.1rem] font-light leading-none tracking-[0.06em] text-latte sm:text-4xl md:text-5xl">
+            of&nbsp;<span className="text-gold-gradient italic">Memory</span>
+          </span>
         </h1>
 
-        {/* 태그라인 */}
-        <p className="mt-7 max-w-md font-serif text-lg leading-relaxed text-espresso/90 sm:text-xl">
-          {EVENT.tagline}
+        {/* 슬로건 */}
+        <p className="mt-9 font-en text-lg italic tracking-wide text-espresso sm:text-xl">
+          {PROJECT.slogan}
         </p>
-        <p className="mt-3 text-sm tracking-wide text-latte">
-          {EVENT.clubName} {EVENT.title}에 당신을 초대합니다
+        <p className="mt-2 text-sm tracking-wide text-latte">{PROJECT.sloganKo}</p>
+
+        {/* 프로젝트 한 줄 */}
+        <p className="mt-8 max-w-md text-[0.95rem] font-light leading-relaxed text-espresso/90">
+          {PROJECT.tagline}
+          <br />
+          우리 40주년 Homecoming에 당신을 초대합니다.
         </p>
 
-        {/* 핵심 정보 요약 */}
-        <div className="mt-10 flex flex-col items-center gap-2 text-sm text-espresso sm:flex-row sm:gap-0">
-          <InfoItem>{EVENT.dateLabel}</InfoItem>
-          <Dot />
-          <InfoItem>
-            {EVENT.timeLabel}
-            <span className="ml-1 text-xs text-latte">({EVENT.doorsLabel})</span>
-          </InfoItem>
-          <Dot />
-          <InfoItem>
-            {EVENT.placeLabel}
-            <span className="ml-1 text-xs text-latte">{EVENT.placeNote}</span>
-          </InfoItem>
+        {/* 창립제(Homecoming) 핵심 정보 + 참가 신청 */}
+        <div className="mt-9 w-full max-w-sm rounded-2xl border border-gold/30 bg-white/55 p-6 text-left shadow-[0_18px_40px_-24px_rgba(28,18,12,0.4)] backdrop-blur-sm">
+          <p className="font-en text-xs uppercase tracking-[0.28em] text-golddeep">
+            {EVENT.chapter} · {EVENT.title}
+          </p>
+          <dl className="mt-4 space-y-2.5">
+            <div className="flex items-center gap-3">
+              <CalendarIcon className="h-4 w-4 shrink-0 text-golddeep" />
+              <dt className="sr-only">일시</dt>
+              <dd className="text-sm font-medium text-espresso">{EVENT.dateLabel}</dd>
+            </div>
+            <div className="flex items-center gap-3">
+              <ClockIcon className="h-4 w-4 shrink-0 text-golddeep" />
+              <dt className="sr-only">시간</dt>
+              <dd className="text-sm text-espresso">
+                {EVENT.timeLabel}
+                <span className="text-espresso/55"> ({EVENT.doorsLabel})</span>
+              </dd>
+            </div>
+            <div className="flex items-center gap-3">
+              <MapPinIcon className="h-4 w-4 shrink-0 text-golddeep" />
+              <dt className="sr-only">장소</dt>
+              <dd className="text-sm text-espresso">{EVENT.placeLabel}</dd>
+            </div>
+          </dl>
+          <a
+            href="#apply"
+            className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-gold to-golddeep py-3.5 text-base font-semibold text-ink shadow-[0_14px_30px_-12px_rgba(201,146,47,0.6)] transition-transform hover:scale-[1.02] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-espresso"
+          >
+            사전 신청하기
+            <span className="rounded-full bg-ink/90 px-2 py-0.5 text-xs font-bold text-cream">필수</span>
+          </a>
         </div>
 
         {/* 스크롤 유도 */}
         <a
-          href="#invitation"
-          className="group mt-14 flex flex-col items-center gap-2 text-latte transition-colors hover:text-mintdeep"
+          href="#about"
+          className="group mt-10 flex flex-col items-center gap-2 text-latte transition-colors hover:text-golddeep"
           aria-label="아래로 스크롤"
         >
-          <span className="text-[0.7rem] uppercase tracking-[0.3em]">Scroll</span>
+          <span className="text-xs uppercase tracking-[0.3em]">Scroll</span>
           <ArrowDownIcon className="h-5 w-5 animate-[float_2.4s_ease-in-out_infinite]" />
         </a>
       </div>
     </section>
   )
-}
-
-function InfoItem({ children }: { children: ReactNode }) {
-  return <span className="px-3 py-0.5">{children}</span>
-}
-
-function Dot() {
-  return <span className="hidden h-1 w-1 rounded-full bg-latte/50 sm:inline-block" />
 }

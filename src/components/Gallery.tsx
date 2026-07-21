@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { GALLERY_IMAGES, GALLERY_PLACEHOLDER_COUNT } from '../config'
 import { CloseIcon } from './Icons'
 import Reveal from './Reveal'
+import Halftone from './Halftone'
 
 /**
  * 추억 사진 갤러리 — 그리드 + 라이트박스.
@@ -44,12 +45,14 @@ export default function Gallery() {
       id="gallery"
       className="anchor-offset relative overflow-hidden bg-gradient-to-b from-cocoa via-ink to-ink px-6 py-24 sm:py-32"
     >
+      <Halftone colorClass="text-gold" opacity={0.14} variant="side" />
+
       <div className="relative z-10 mx-auto max-w-5xl">
         <Reveal className="text-center">
-          <p className="mb-3 text-xs font-medium uppercase tracking-[0.3em] text-latte">
+          <p className="mb-4 text-xs font-medium uppercase tracking-[0.34em] text-latte">
             Memories · Base Note
           </p>
-          <h2 className="font-serif text-3xl text-cream sm:text-4xl">40년의 잔향</h2>
+          <h2 className="text-3xl text-cream sm:text-4xl">40년의 잔향</h2>
           <p className="mt-4 text-sm text-cream/60">
             오래 남아 있는 향처럼, 우리가 함께 쌓아온 순간들
           </p>
@@ -72,7 +75,7 @@ export default function Gallery() {
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   {img.caption && (
-                    <span className="absolute inset-x-0 bottom-0 translate-y-2 bg-gradient-to-t from-ink/90 to-transparent px-3 pb-2 pt-8 text-left text-xs text-cream/90 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                    <span className="absolute inset-x-0 bottom-0 translate-y-2 bg-gradient-to-t from-ink/90 to-transparent px-3 pb-2 pt-8 text-left text-sm text-cream/90 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
                       {img.caption}
                     </span>
                   )}
@@ -84,9 +87,14 @@ export default function Gallery() {
           <div className="mt-14 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
             {Array.from({ length: GALLERY_PLACEHOLDER_COUNT }).map((_, i) => (
               <Reveal key={i} delay={(i % 4) * 60}>
-                <div className="flex aspect-square flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-cream/15 bg-white/[0.03] text-center">
-                  <span className="text-2xl opacity-40">🕯️</span>
-                  <span className="px-2 text-[0.7rem] leading-tight text-cream/40">
+                <div className="relative flex aspect-square flex-col items-center justify-center gap-2 overflow-hidden rounded-xl border border-dashed border-cream/15 bg-white/[0.03] text-center">
+                  <span className="dots absolute inset-0 text-gold/15" aria-hidden />
+                  <span className="relative grid h-8 w-8 place-items-center rounded-full border border-gold/25 text-gold/70">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 3c3.5 4 6 6.8 6 10a6 6 0 0 1-12 0c0-3.2 2.5-6 6-10Z" />
+                    </svg>
+                  </span>
+                  <span className="relative px-2 text-xs leading-tight text-cream/40">
                     추억을 기다리는 중
                   </span>
                 </div>
@@ -96,7 +104,7 @@ export default function Gallery() {
         )}
 
         {!hasImages && (
-          <p className="mt-8 text-center text-xs text-cream/40">
+          <p className="mt-8 text-center text-sm text-cream/40">
             사진은 준비되는 대로 이 자리에 하나씩 채워집니다.
           </p>
         )}

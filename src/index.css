@@ -2,8 +2,9 @@
 
 /* ------------------------------------------------------------------ */
 /*  Woori 40th — 디자인 토큰                                            */
-/*  컨셉: 40년의 추억을 담은 하나의 향수                                  */
-/*  탑(아쿠아/민트) → 미들(라떼) → 베이스(앰버/우디)로 깊어지는 팔레트     */
+/*  컨셉: Scent of Memory — 40년의 추억을 담은 하나의 향수               */
+/*  포스터 무드: BLUE HOUR. 하프톤 도트, 청량한 화이트, 하늘빛 블루.      */
+/*  스크롤 서사: 낮의 청량함(라이트) → 블루아워(딥블루) → 밤(어비스)     */
 /* ------------------------------------------------------------------ */
 @theme {
   /* 베이스 노트 — 오래된 선배들의 추억 (우디하고 묵직한 잔향) */
@@ -21,8 +22,6 @@
   --color-mist: #f4f8f7;
 
   /* 포인트 컬러 */
-  --color-mint: #6fc4b8;
-  --color-mintdeep: #3f9c90;
   --color-gold: #e6b45a;
   --color-golddeep: #c9922f;
 
@@ -33,8 +32,9 @@
     system-ui, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', Roboto, sans-serif;
 
   /* 부드러운 등장 애니메이션 */
-  --animate-float: float 7s ease-in-out infinite;
-  --animate-shimmer: shimmer 3.5s ease-in-out infinite;
+  --animate-float: float 8s ease-in-out infinite;
+  --animate-drift: drift 26s ease-in-out infinite;
+  --animate-breathe: breathe 7s ease-in-out infinite;
 }
 
 @keyframes float {
@@ -47,13 +47,24 @@
   }
 }
 
-@keyframes shimmer {
+/* 하프톤 필드가 아주 천천히 흐르는 듯한 움직임 */
+@keyframes drift {
   0%,
   100% {
-    opacity: 0.55;
+    transform: translate3d(0, 0, 0) scale(1);
   }
   50% {
-    opacity: 1;
+    transform: translate3d(-2%, -2.5%, 0) scale(1.04);
+  }
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.9;
   }
 }
 
@@ -75,16 +86,17 @@
     overflow-x: hidden;
   }
 
-  /* 제목 기본 세리프 */
+  /* 한글 제목은 산세리프로 (포스터의 에디토리얼 그로테스크 무드) */
   h1,
   h2,
   h3 {
-    font-family: var(--font-serif);
-    letter-spacing: -0.01em;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    letter-spacing: -0.02em;
   }
 
   ::selection {
-    background: color-mix(in srgb, var(--color-mint) 45%, transparent);
+    background: color-mix(in srgb, var(--color-gold) 45%, transparent);
     color: var(--color-ink);
   }
 }
@@ -107,17 +119,29 @@
     transform: none;
   }
 
-  /* 영문 디스플레이 제목 */
+  /* 영문 디스플레이 (Cormorant) — 포스터의 우아한 세리프 */
   .font-en {
     font-family: var(--font-display);
     font-weight: 500;
     letter-spacing: 0.01em;
   }
 
+  /* 포스터의 시그니처 — 하프톤 도트 필드.
+     currentColor 를 쓰므로 text-gold/40 같은 클래스로 색·투명도를 제어. */
+  .dots {
+    background-image: radial-gradient(currentColor 1.25px, transparent 1.55px);
+    background-size: 9px 9px;
+    background-position: 0 0;
+  }
+  .dots-lg {
+    background-image: radial-gradient(currentColor 1.7px, transparent 2px);
+    background-size: 14px 14px;
+  }
+
   /* 은은한 빛번짐(향이 퍼지는) 원형 광원 */
   .aura {
     border-radius: 9999px;
-    filter: blur(60px);
+    filter: blur(64px);
     pointer-events: none;
   }
 

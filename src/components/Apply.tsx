@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { FormEvent, ReactNode } from 'react'
-import { COHORT_OPTIONS, FILLED_PERCENT } from '../config'
+import { COHORT_OPTIONS, FILLED_PERCENT, LUCKY_DRAW } from '../config'
 import type { ApplyForm } from '../types'
 import { submitApplication } from '../lib/submit'
 import {
@@ -11,6 +11,7 @@ import {
 } from '../lib/validation'
 import Reveal from './Reveal'
 import { SparkleIcon } from './Icons'
+import Halftone from './Halftone'
 
 const pct = Math.max(0, Math.min(100, FILLED_PERCENT))
 
@@ -79,16 +80,16 @@ export default function Apply() {
       id="apply"
       className="anchor-offset relative overflow-hidden bg-gradient-to-b from-ink to-[#150c07] px-6 py-24 sm:py-28"
     >
-      <div className="aura absolute left-1/2 top-10 h-72 w-72 -translate-x-1/2 bg-mint/10" />
+      <Halftone colorClass="text-gold" opacity={0.14} variant="sideLeft" />
 
       <div className="relative z-10 mx-auto max-w-xl">
         <Reveal className="text-center">
-          <p className="mb-3 text-xs font-medium uppercase tracking-[0.3em] text-mint">
-            RSVP
+          <p className="mb-4 text-xs font-medium uppercase tracking-[0.34em] text-gold">
+            RSVP · Chapter 03 Homecoming
           </p>
-          <h2 className="font-serif text-3xl text-cream sm:text-4xl">참가 신청</h2>
+          <h2 className="text-3xl text-cream sm:text-4xl">창립제 참가 신청</h2>
           <p className="mt-4 text-sm leading-relaxed text-cream/70">
-            좌석이 한정되어 있어 <span className="text-mint">선착순 사전 신청</span>을 받습니다.
+            좌석이 한정되어 있어 <span className="text-gold">선착순 사전 신청</span>을 받습니다.
             <br />
             자리가 채워지는 대로 마감되니 서둘러 주세요.
           </p>
@@ -103,13 +104,13 @@ export default function Apply() {
             </div>
             <div className="mt-3 h-2.5 w-full overflow-hidden rounded-full bg-white/10">
               <div
-                className="h-full rounded-full bg-gradient-to-r from-mint via-mint to-gold transition-[width] duration-700 ease-out"
+                className="h-full rounded-full bg-gradient-to-r from-gold via-gold to-golddeep transition-[width] duration-700 ease-out"
                 style={{ width: `${pct}%` }}
               />
             </div>
-            <p className="mt-3 flex items-center gap-1.5 text-xs text-gold/90">
+            <p className="mt-3 flex items-center gap-1.5 text-sm text-gold/90">
               <SparkleIcon className="h-3.5 w-3.5" />
-              선착순 신청자 한정 <b className="font-semibold">럭키 드로우 경품</b>이 준비되어 있어요.
+              선착순 {LUCKY_DRAW.doorPrizeCount}명에게는 <b className="font-semibold">웰컴 선물</b>을 드려요.
             </p>
           </div>
         </Reveal>
@@ -188,7 +189,7 @@ export default function Apply() {
                     type="checkbox"
                     checked={form.agree}
                     onChange={(e) => update('agree', e.target.checked)}
-                    className="mt-0.5 h-5 w-5 shrink-0 cursor-pointer accent-mint"
+                    className="mt-0.5 h-5 w-5 shrink-0 cursor-pointer accent-gold"
                   />
                   <span>
                     <b className="font-medium text-cream">개인정보 제공에 동의합니다.</b>{' '}
@@ -198,7 +199,7 @@ export default function Apply() {
                     </span>
                   </span>
                 </label>
-                {errors.agree && <p className="mt-1.5 pl-8 text-xs text-red-300">{errors.agree}</p>}
+                {errors.agree && <p className="mt-1.5 pl-8 text-sm text-red-300">{errors.agree}</p>}
               </div>
 
               {/* 전송 오류 안내 */}
@@ -211,7 +212,7 @@ export default function Apply() {
               <button
                 type="submit"
                 disabled={submitting || !form.agree}
-                className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-mint to-mintdeep py-4 text-base font-semibold text-ink shadow-[0_12px_30px_-10px_rgba(63,156,144,0.7)] transition-all hover:shadow-[0_16px_36px_-10px_rgba(63,156,144,0.85)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
+                className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-gold to-golddeep py-4 text-base font-semibold text-ink shadow-[0_12px_30px_-10px_rgba(201,146,47,0.6)] transition-all hover:shadow-[0_16px_36px_-10px_rgba(201,146,47,0.75)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
               >
                 {submitting ? (
                   <>
@@ -221,7 +222,7 @@ export default function Apply() {
                   '신청 완료하기'
                 )}
               </button>
-              <p className="text-center text-xs text-cream/40">
+              <p className="text-center text-sm text-cream/40">
                 제출 시 위 개인정보 수집·이용에 동의한 것으로 간주됩니다.
               </p>
             </form>
@@ -251,36 +252,36 @@ function Field({
     <div>
       <label htmlFor={htmlFor} className="mb-1.5 block text-sm font-medium text-cream/85">
         {label}
-        {required && <span className="ml-1 text-mint">*</span>}
+        {required && <span className="ml-1 text-gold">*</span>}
       </label>
       {children}
-      {error && <p className="mt-1.5 text-xs text-red-300">{error}</p>}
+      {error && <p className="mt-1.5 text-sm text-red-300">{error}</p>}
     </div>
   )
 }
 
 function inputCls(hasError: boolean): string {
-  return `w-full rounded-xl border bg-ink/40 px-4 py-3 text-cream placeholder:text-cream/30 outline-none transition-colors focus:border-mint focus:ring-2 focus:ring-mint/30 ${
+  return `w-full rounded-xl border bg-ink/40 px-4 py-3 text-cream placeholder:text-cream/30 outline-none transition-colors focus:border-gold focus:ring-2 focus:ring-gold/30 ${
     hasError ? 'border-red-400/60' : 'border-cream/15'
   }`
 }
 
 function SuccessCard({ name, simulated }: { name: string; simulated?: boolean }) {
   return (
-    <div className="rounded-2xl border border-mint/30 bg-mint/[0.06] p-8 text-center">
-      <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-gradient-to-br from-mint to-mintdeep text-ink">
+    <div className="rounded-2xl border border-gold/30 bg-gold/[0.06] p-8 text-center">
+      <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-gradient-to-br from-gold to-golddeep text-ink">
         <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M4 12l5 5L20 6" />
         </svg>
       </div>
-      <h3 className="mt-5 font-serif text-2xl text-cream">신청이 완료되었어요!</h3>
+      <h3 className="mt-5 text-2xl text-cream">신청이 완료되었어요!</h3>
       <p className="mt-3 text-sm leading-relaxed text-cream/75">
-        <b className="text-mint">{name}</b>님, 40주년 창립제에서 만나요.
+        <b className="text-gold">{name}</b>님, 40주년 창립제에서 만나요.
         <br />
         자세한 장소와 안내는 신청해 주신 번호로 따로 연락드릴게요.
       </p>
       {simulated && (
-        <p className="mt-5 rounded-lg border border-gold/30 bg-gold/10 px-3 py-2 text-xs text-gold/90">
+        <p className="mt-5 rounded-lg border border-gold/30 bg-gold/10 px-3 py-2 text-sm text-gold/90">
           ⚙️ 테스트 모드입니다 — 실제 시트에는 저장되지 않았어요.
           <br />
           <span className="text-gold/70">

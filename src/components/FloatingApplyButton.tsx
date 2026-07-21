@@ -33,7 +33,7 @@ export default function FloatingApplyButton() {
   return (
     <a
       href="#apply"
-      className={`fixed bottom-5 right-5 z-40 flex items-center gap-2 rounded-full border border-gold/40 bg-gradient-to-r from-mint to-mintdeep px-5 py-3 text-sm font-semibold text-ink shadow-[0_10px_30px_-8px_rgba(63,156,144,0.6)] ring-1 ring-white/20 transition-all duration-500 hover:scale-[1.03] hover:shadow-[0_14px_36px_-8px_rgba(63,156,144,0.75)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold ${
+      className={`fixed bottom-5 right-5 z-40 flex items-center gap-2 rounded-full border border-gold/40 bg-gradient-to-r from-gold to-golddeep px-5 py-3 text-sm font-semibold text-ink shadow-[0_10px_30px_-8px_rgba(201,146,47,0.55)] ring-1 ring-white/20 transition-all duration-500 hover:scale-[1.03] hover:shadow-[0_14px_36px_-8px_rgba(201,146,47,0.7)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream ${
         visible
           ? 'pointer-events-auto translate-y-0 opacity-100'
           : 'pointer-events-none translate-y-4 opacity-0'

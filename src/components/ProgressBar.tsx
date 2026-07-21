@@ -13,7 +13,7 @@ export default function ProgressBar() {
       {/* 최상단 진행 라인 */}
       <div className="h-[3px] w-full bg-ink/30">
         <div
-          className="h-full bg-gradient-to-r from-mint via-mint to-gold transition-[width] duration-700 ease-out"
+          className="h-full bg-gradient-to-r from-gold via-gold to-golddeep transition-[width] duration-700 ease-out"
           style={{ width: `${pct}%` }}
         />
       </div>
@@ -26,7 +26,7 @@ export default function ProgressBar() {
             className="font-en text-sm tracking-wide text-cream/90 sm:text-base"
             aria-label="맨 위로"
           >
-            Woori <span className="text-gold">40th</span>
+            Woori <span className="text-gold-gradient italic">40th</span>
           </a>
 
           <div className="flex items-center gap-2 sm:gap-3">
@@ -40,7 +40,7 @@ export default function ProgressBar() {
               aria-label="신청 마감 현황"
             >
               <div
-                className="h-full rounded-full bg-gradient-to-r from-mint to-gold"
+                className="h-full rounded-full bg-gradient-to-r from-gold to-golddeep"
                 style={{ width: `${pct}%` }}
               />
             </div>
