@@ -15,24 +15,19 @@ export default function Hero() {
       {/* 하프톤 도트 블룸 (탑노트 골드) */}
       <Halftone colorClass="text-gold" opacity={0.5} variant="bloom" />
 
-      {/* 음악 동호회 무드 — 흐릿한 기타 실루엣 (은은한 배경) */}
+      {/* 음악 동호회 무드 — 흐릿한 높은음자리표 실루엣 (은은한 배경) */}
       <svg
         aria-hidden
-        viewBox="0 0 200 380"
-        className="pointer-events-none absolute right-[-2.5rem] top-1/2 z-0 h-[118%] w-auto -translate-y-1/2 rotate-[15deg] text-espresso/[0.07] blur-[2px] sm:right-2"
+        viewBox="0 0 200 480"
+        className="pointer-events-none absolute right-[-2.5rem] top-1/2 z-0 h-[82%] w-auto -translate-y-1/2 rotate-[12deg] text-espresso/[0.07] blur-[2px] sm:right-2"
         fill="none"
         stroke="currentColor"
-        strokeWidth="4"
+        strokeWidth="5"
         strokeLinecap="round"
         strokeLinejoin="round"
       >
-        <rect x="88" y="14" width="24" height="30" rx="6" />
-        <path d="M84 22h6M84 30h6M110 22h6M110 30h6" />
-        <path d="M94 44v106M106 44v106" />
-        <path d="M100 150 C130 150 151 176 149 202 C148 220 132 230 132 242 C132 260 153 274 153 298 C153 328 129 346 100 346 C71 346 47 328 47 298 C47 274 68 260 68 242 C68 230 52 220 51 202 C49 176 70 150 100 150 Z" />
-        <circle cx="100" cy="250" r="22" />
-        <path d="M96 150v152M100 150v152M104 150v152" />
-        <path d="M86 292h28" />
+        <path d="M82 434 C70 430 72 410 88 410 C96 410 100 416 100 424 C100 384 100 344 100 300 C100 240 100 160 100 110 C100 74 104 46 122 48 C142 50 148 78 134 100 C124 116 108 128 108 150 C108 180 150 214 150 250 C150 292 122 320 88 320 C50 320 22 290 22 250 C22 214 50 188 84 188 C112 188 132 210 132 240 C132 272 116 300 96 300" />
+        <circle cx="70" cy="446" r="8" fill="currentColor" stroke="none" />
       </svg>
 
       <div className="relative z-10 flex flex-col items-center">

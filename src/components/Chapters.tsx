@@ -113,7 +113,7 @@ export default function Chapters() {
 
         <Reveal delay={120}>
           <p className="mt-10 text-center text-2xl font-semibold leading-snug text-espresso sm:text-3xl">
-            <span className="text-golddeep">Chapter 03 · Homecoming(창립제)</span>에 당신을 초대합니다.
+            <span className="text-golddeep">Chapter 03,</span> 우리 40주년 창립제에 초대합니다.
           </p>
         </Reveal>
       </div>

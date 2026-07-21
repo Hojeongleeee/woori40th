@@ -56,7 +56,7 @@ export default function Homecoming() {
 
         {/* 좌석 한정 안내 + 참가 신청 (상단 배치) */}
         <Reveal delay={100} className="mt-10 text-center">
-          <p className="mx-auto max-w-lg text-sm leading-relaxed text-cream/75">
+          <p className="mx-auto max-w-lg text-sm leading-relaxed text-cream/75 break-keep">
             <span className="font-semibold text-gold">장소 여건상 좌석이 한정</span>되어 있어,
             사전 신청하신 분에 한해 입장하실 수 있어요. 자리가 마감되기 전에 먼저 신청해 주세요.
           </p>
