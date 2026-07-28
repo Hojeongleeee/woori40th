@@ -1,6 +1,7 @@
 import { EVENT, PROJECT } from '../config'
 import Reveal from './Reveal'
 import Halftone from './Halftone'
+import VenueMap from './VenueMap'
 
 /**
  * 마지막 — 행사 정보 요약 + 문의. 가장 깊은 베이스의 잔향.
@@ -50,6 +51,11 @@ export default function EventSummary() {
               </div>
             ))}
           </dl>
+        </Reveal>
+
+        {/* 장소 지도 */}
+        <Reveal delay={160}>
+          <VenueMap className="mx-auto mt-10 max-w-md" />
         </Reveal>
 
         <Reveal delay={200}>

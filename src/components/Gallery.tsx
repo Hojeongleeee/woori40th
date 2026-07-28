@@ -1,16 +1,14 @@
 import { useCallback, useEffect, useState } from 'react'
-import { GALLERY_IMAGES, GALLERY_PLACEHOLDER_COUNT } from '../config'
+import { GALLERY_IMAGES } from '../config'
 import { CloseIcon } from './Icons'
 import Reveal from './Reveal'
 import Halftone from './Halftone'
 
 /**
  * 추억 사진 갤러리 — 그리드 + 라이트박스.
- * config.ts 의 GALLERY_IMAGES 배열에 이미지를 넣으면 자동으로 채워지고,
- * 비어 있으면 "추억을 기다리는 중" placeholder 를 보여줍니다.
+ * 사진은 config.ts 의 GALLERY_IMAGES 배열에서 가져옵니다.
  */
 export default function Gallery() {
-  const hasImages = GALLERY_IMAGES.length > 0
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   const close = useCallback(() => setOpenIndex(null), [])
@@ -59,55 +57,29 @@ export default function Gallery() {
           <div className="mx-auto mt-6 h-px w-14 bg-ink" />
         </Reveal>
 
-        {hasImages ? (
-          <div className="mt-14 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
-            {GALLERY_IMAGES.map((img, i) => (
-              <Reveal key={img.src} delay={(i % 3) * 70}>
-                <button
-                  type="button"
-                  onClick={() => setOpenIndex(i)}
-                  className="group relative block aspect-square w-full overflow-hidden border border-ink/15 bg-paper"
-                >
-                  <img
-                    src={img.src}
-                    alt={img.caption ?? `Woori 추억 사진 ${i + 1}`}
-                    loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  {img.caption && (
-                    <span className="absolute inset-x-0 bottom-0 translate-y-2 bg-gradient-to-t from-ink/90 to-transparent px-3 pb-2 pt-8 text-left text-sm text-cream/90 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                      {img.caption}
-                    </span>
-                  )}
-                </button>
-              </Reveal>
-            ))}
-          </div>
-        ) : (
-          <div className="mt-14 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-            {Array.from({ length: GALLERY_PLACEHOLDER_COUNT }).map((_, i) => (
-              <Reveal key={i} delay={(i % 4) * 60}>
-                <div className="relative flex aspect-square flex-col items-center justify-center gap-2 overflow-hidden border border-dashed border-ink/30 bg-cream text-center">
-                  <span className="dots-lg absolute inset-0 text-marigold/55" aria-hidden />
-                  <span className="relative grid h-8 w-8 place-items-center rounded-full border border-ink/35 text-ink/60">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M12 3c3.5 4 6 6.8 6 10a6 6 0 0 1-12 0c0-3.2 2.5-6 6-10Z" />
-                    </svg>
+        <div className="mt-14 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
+          {GALLERY_IMAGES.map((img, i) => (
+            <Reveal key={img.src} delay={(i % 3) * 70}>
+              <button
+                type="button"
+                onClick={() => setOpenIndex(i)}
+                className="group relative block aspect-square w-full overflow-hidden border border-ink/15 bg-paper"
+              >
+                <img
+                  src={img.src}
+                  alt={img.caption ?? `Woori 추억 사진 ${i + 1}`}
+                  loading="lazy"
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                {img.caption && (
+                  <span className="absolute inset-x-0 bottom-0 translate-y-2 bg-gradient-to-t from-ink/90 to-transparent px-3 pb-2 pt-8 text-left text-sm text-cream/90 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                    {img.caption}
                   </span>
-                  <span className="relative px-2 text-xs font-medium leading-tight text-graphite">
-                    추억을 기다리는 중
-                  </span>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        )}
-
-        {!hasImages && (
-          <p className="mt-8 text-center text-sm text-stone">
-            사진은 준비되는 대로 이 자리에 하나씩 채워집니다.
-          </p>
-        )}
+                )}
+              </button>
+            </Reveal>
+          ))}
+        </div>
       </div>
 
       {/* 라이트박스 */}

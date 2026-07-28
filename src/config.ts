@@ -125,13 +125,58 @@ export const EVENT = {
   doorsLabel: '오후 5시 입장 시작',
 
   // 장소
-  placeLabel: '강남·종로 인근',
-  placeNote: '(정확한 위치는 추후 안내드립니다)',
+  placeLabel: '어썸그라운드 재즈바 (용산구)',
+  placeNote: '서울 용산구 한강대로 258, 3층',
 
   // 문의
   contactLabel: 'WOORI 40주년 준비위원회',
   contactValue: 'woori40th@example.com',
 } as const
+
+/* ------------------------------------------------------------------
+ *  6-1) 네이버 지도
+ *
+ *  ★ 지도가 안 보이면 대부분 "Web 서비스 URL 미등록" 이 원인입니다.
+ *    https://console.ncloud.com/maps/application 에서 이 사이트 주소를
+ *    Web 서비스 URL 에 등록해 주세요. 등록되지 않은 주소에서는
+ *    "인증이 실패하였습니다" 가 뜨고 지도 대신 주소 안내가 표시됩니다.
+ *      · 배포 주소  (예: https://woori40th.vercel.app)
+ *      · 로컬 확인용 http://localhost:5173
+ *
+ *  ※ naverClientId 는 브라우저에 그대로 노출되는 값이라 공개되어도 괜찮습니다.
+ *    (도메인 등록으로 보호되는 방식) 반면 Client Secret 은 절대 이 파일에
+ *    넣지 마세요. 프론트엔드 코드는 누구나 볼 수 있고, 지도 표시에는
+ *    Secret 이 필요하지도 않습니다.
+ * ------------------------------------------------------------------ */
+export const VENUE_MAP: {
+  naverClientId: string
+  /** 콘솔에서 발급한 키 종류에 맞춰 인증 파라미터를 고릅니다.
+   *  구형(Client ID) = 'ncpClientId' / 신형(Key ID) = 'ncpKeyId'
+   *  현재 키는 'ncpClientId' 로 응답이 정상이라 이쪽으로 설정했습니다. */
+  authParam: 'ncpClientId' | 'ncpKeyId'
+  placeName: string
+  /** "지도보기" 를 눌렀을 때 네이버 지도에서 검색될 문구 */
+  searchQuery: string
+  address: string
+  addressNote: string
+  /** 좌표를 넣으면 그 지점에 마커를 찍고, null 이면 위 address 로 자동 검색합니다. */
+  coords: { lat: number; lng: number } | null
+  zoom: number
+} = {
+  naverClientId: 'ghm5lczey8',
+  authParam: 'ncpClientId',
+  placeName: '어썸그라운드',
+  searchQuery: '어썸그라운드 재즈바',
+  address: '서울 용산구 한강대로 258, 3층',
+  addressNote: '남영역 · 숙대입구역에서 도보 5분',
+  coords: null,
+  zoom: 17,
+}
+
+/** 장소명·"지도보기" 를 눌렀을 때 열리는 네이버 지도 검색 링크 (API 키 없이도 동작). */
+export const NAVER_MAP_URL = `https://map.naver.com/p/search/${encodeURIComponent(
+  VENUE_MAP.searchQuery,
+)}`
 
 /* ------------------------------------------------------------------
  *  7) 프로그램 타임라인 (창립제 당일)
@@ -207,14 +252,20 @@ export const LUCKY_DRAW = {
 /* ------------------------------------------------------------------
  *  11) 추억 사진 갤러리
  * ------------------------------------------------------------------ */
+/* caption 을 넣으면 마우스를 올렸을 때와 크게 볼 때 사진 아래에 표시됩니다. */
 export type GalleryImage = { src: string; caption?: string }
 
 export const GALLERY_IMAGES: GalleryImage[] = [
-  // 예시) { src: '/gallery/1986-first-stage.jpg', caption: '1기 첫 무대, 1986' },
+  { src: '/gallery/01.jpg' },
+  { src: '/gallery/02.jpg' },
+  { src: '/gallery/03.jpg' },
+  { src: '/gallery/04.jpg' },
+  { src: '/gallery/05.jpg' },
+  { src: '/gallery/06.jpg' },
+  { src: '/gallery/07.jpg' },
+  { src: '/gallery/08.jpg' },
+  { src: '/gallery/09.jpg' },
 ]
-
-/* 사진이 아직 없을 때 보여줄 placeholder 개수 */
-export const GALLERY_PLACEHOLDER_COUNT = 8
 
 /* ------------------------------------------------------------------
  *  12) 기수 선택 옵션 (신청 폼) — 비우면 자유 입력(텍스트)

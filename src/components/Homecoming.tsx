@@ -1,4 +1,5 @@
-import { EVENT } from '../config'
+import { EVENT, NAVER_MAP_URL } from '../config'
+import { MapPinIcon } from './Icons'
 import Reveal from './Reveal'
 import Halftone from './Halftone'
 
@@ -10,7 +11,7 @@ import Halftone from './Halftone'
 export default function Homecoming() {
   const info = [
     { label: '일시', value: EVENT.dateLabel, sub: `${EVENT.timeLabel} (${EVENT.doorsLabel})` },
-    { label: '장소', value: EVENT.placeLabel, sub: EVENT.placeNote },
+    { label: '장소', value: EVENT.placeLabel, sub: EVENT.placeNote, map: true },
     { label: '대상', value: '선배 · 활동 기수 누구나', sub: '동아리와의 추억 하나면 충분해요' },
   ]
 
@@ -48,7 +49,20 @@ export default function Homecoming() {
                   {r.label}
                 </dt>
                 <dd className="mt-2 font-medium text-cream">{r.value}</dd>
-                <dd className="mt-1 text-sm text-cream/50">{r.sub}</dd>
+                {r.map && (
+                  <dd className="mt-2">
+                    <a
+                      href={NAVER_MAP_URL}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="inline-flex items-center gap-1.5 border border-marigold/50 px-2.5 py-1 text-xs font-semibold text-marigold transition-colors hover:bg-marigold hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marigold"
+                    >
+                      <MapPinIcon className="h-3.5 w-3.5" />
+                      지도보기
+                    </a>
+                  </dd>
+                )}
+                <dd className="mt-2 text-sm text-cream/50">{r.sub}</dd>
               </div>
             ))}
           </dl>

@@ -11,6 +11,10 @@ dist
 dist-ssr
 *.local
 
+# 갤러리 원본 사진 (11MB). 웹에 쓰이는 건 public/gallery 의 최적화본이라
+# 원본까지 저장소에 넣지는 않습니다. 원본 보관이 필요하면 이 줄을 지우세요.
+src/img/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

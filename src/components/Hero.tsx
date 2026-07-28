@@ -1,4 +1,4 @@
-import { EVENT, PROJECT } from '../config'
+import { EVENT, NAVER_MAP_URL, PROJECT } from '../config'
 import { ArrowDownIcon, CalendarIcon, ClockIcon, MapPinIcon } from './Icons'
 import Halftone, { PosterBands } from './Halftone'
 
@@ -70,7 +70,8 @@ export default function Hero() {
           </div>
 
           {/* 창립제 핵심 정보 + 참가 신청 */}
-          <div className="w-full max-w-sm border border-ink/20 bg-paper/85 p-6 text-left backdrop-blur-sm md:w-80">
+          {/* 장소명 옆에 "지도보기" 가 한 줄로 들어가도록 카드 폭을 조금 넉넉히 */}
+          <div className="w-full max-w-sm border border-ink/20 bg-paper/85 p-6 text-left backdrop-blur-sm md:w-[21.5rem]">
             <p className="font-en text-xs font-semibold uppercase tracking-[0.26em] text-ink">
               {EVENT.title}
             </p>
@@ -88,10 +89,28 @@ export default function Hero() {
                   <span className="text-stone"> ({EVENT.doorsLabel})</span>
                 </dd>
               </div>
-              <div className="flex items-center gap-3">
-                <MapPinIcon className="h-4 w-4 shrink-0 text-amber" />
+              <div className="flex items-start gap-3">
+                <MapPinIcon className="mt-0.5 h-4 w-4 shrink-0 text-amber" />
                 <dt className="sr-only">장소</dt>
-                <dd className="text-sm text-graphite">{EVENT.placeLabel}</dd>
+                <dd className="flex flex-wrap items-center gap-x-2 gap-y-1.5 text-sm text-graphite">
+                  <a
+                    href={NAVER_MAP_URL}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="font-medium text-ink underline decoration-ink/30 underline-offset-4 transition-colors hover:decoration-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+                  >
+                    {EVENT.placeLabel}
+                  </a>
+                  <a
+                    href={NAVER_MAP_URL}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="inline-flex shrink-0 items-center gap-1 border border-ink/30 px-2 py-0.5 text-xs font-semibold text-ink transition-colors hover:bg-ink hover:text-cream focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+                  >
+                    <MapPinIcon className="h-3 w-3" />
+                    지도보기
+                  </a>
+                </dd>
               </div>
             </dl>
             <a

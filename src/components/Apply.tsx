@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { FormEvent, ReactNode } from 'react'
-import { COHORT_OPTIONS, FILLED_PERCENT, LUCKY_DRAW } from '../config'
+import { COHORT_OPTIONS, FILLED_PERCENT } from '../config'
 import type { ApplyForm } from '../types'
 import { submitApplication } from '../lib/submit'
 import {
@@ -10,7 +10,6 @@ import {
   isValidPhone,
 } from '../lib/validation'
 import Reveal from './Reveal'
-import { SparkleIcon } from './Icons'
 import Halftone from './Halftone'
 
 const pct = Math.max(0, Math.min(100, FILLED_PERCENT))
@@ -108,10 +107,6 @@ export default function Apply() {
                 style={{ width: `${pct}%` }}
               />
             </div>
-            <p className="mt-3 flex items-center gap-1.5 text-sm text-marigold/90">
-              <SparkleIcon className="h-3.5 w-3.5" />
-              선착순 {LUCKY_DRAW.doorPrizeCount}명에게는 <b className="font-semibold">웰컴 선물</b>을 드려요.
-            </p>
           </div>
         </Reveal>
 

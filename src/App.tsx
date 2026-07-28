@@ -8,7 +8,8 @@ import Homecoming from './components/Homecoming'
 import Timeline from './components/Timeline'
 import SpecialCorners from './components/SpecialCorners'
 import Goods from './components/Goods'
-import LuckyDraw from './components/LuckyDraw'
+// 럭키 드로우 — 경품 확정 전까지 숨김. 다시 보이게 하려면 이 줄과 아래 <LuckyDraw /> 의 주석을 해제.
+// import LuckyDraw from './components/LuckyDraw'
 import Gallery from './components/Gallery'
 import Apply from './components/Apply'
 import EventSummary from './components/EventSummary'
@@ -44,7 +45,7 @@ export default function App() {
         <Timeline />
         <SpecialCorners />
         <Goods />
-        <LuckyDraw />
+        {/* <LuckyDraw /> — 경품 확정 후 주석 해제 */}
         <Gallery />
         <Apply />
       </main>
