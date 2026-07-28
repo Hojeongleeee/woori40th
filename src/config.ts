@@ -16,8 +16,13 @@ export const FILLED_PERCENT = 68
 /* ------------------------------------------------------------------
  *  2) 구글 시트 저장용 엔드포인트 URL
  * ------------------------------------------------------------------ */
+/* Apps Script 웹앱 주소.
+ * ※ Apps Script 에서 "새 배포" 를 하면 주소가 새로 생깁니다.
+ *   그럴 때는 이 값도 새 주소로 바꿔야 합니다.
+ *   (주소를 유지하려면 "배포 관리 → 편집 → 버전: 새 버전" 으로 배포)
+ *   주소를 브라우저로 열었을 때 version 이 보이면 최신 코드입니다. */
 export const GOOGLE_SHEET_ENDPOINT =
-  'https://script.google.com/macros/s/AKfycbyJkvSiduZNKeDp0HG5UWGbMDJAmwpikP74XOQJ8aEGDN5qMYf9aEji8emCHbNtwsCW/exec'
+  'https://script.google.com/macros/s/AKfycbyQJl0ag30WBeDRMhDn_5x9LPZFevfTgF6PH7VmOvqESm1KbmVbCcRzNFy3iIbS8jIA/exec'
 
 /* 엔드포인트 미설정 시 제출을 "성공한 것처럼" 시뮬레이션할지 여부. */
 export const SIMULATE_SUBMIT_WHEN_NO_ENDPOINT = true
