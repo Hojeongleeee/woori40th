@@ -16,6 +16,10 @@
 var SHEET_NAME = '신청';
 var HEADERS = ['신청시각', '이름', '핸드폰번호', '기수', '동의여부', '공연도움'];
 
+// 어느 버전이 배포됐는지 브라우저로 확인하기 위한 표식.
+// 웹앱 주소를 열었을 때 이 값이 안 보이면 옛 코드가 배포된 상태입니다.
+var VERSION = 'v2-helpPerform';
+
 /**
  * POST 요청 처리 — 초대장 폼에서 호출됩니다.
  */
@@ -63,9 +67,15 @@ function doPost(e) {
 
 /**
  * GET 요청 — 배포가 잘 됐는지 브라우저로 확인용.
+ * version 과 headers 가 보이면 최신 코드가 배포된 것입니다.
  */
 function doGet() {
-  return json_({ result: 'ok', message: 'Woori 40th endpoint alive' });
+  return json_({
+    result: 'ok',
+    message: 'Woori 40th endpoint alive',
+    version: VERSION,
+    headers: HEADERS,
+  });
 }
 
 /* ------------------------- 내부 유틸 ------------------------- */
@@ -95,14 +105,20 @@ function getSheet_() {
     return sheet;
   }
 
-  // 이미 쓰던 시트라면, 나중에 늘어난 열 제목만 뒤에 덧붙인다.
-  var lastCol = sheet.getLastColumn();
-  if (lastCol < HEADERS.length) {
-    var missing = HEADERS.slice(lastCol);
-    sheet
-      .getRange(1, lastCol + 1, 1, missing.length)
-      .setValues([missing])
-      .setFontWeight('bold');
+  // 이미 쓰던 시트라면, 비어 있는 열 제목만 채운다.
+  // (직접 바꿔 둔 제목은 건드리지 않는다)
+  var width = Math.max(sheet.getLastColumn(), HEADERS.length);
+  var header = sheet.getRange(1, 1, 1, width).getValues()[0];
+  var changed = false;
+  for (var c = 0; c < HEADERS.length; c++) {
+    if (!String(header[c] || '').trim()) {
+      header[c] = HEADERS[c];
+      changed = true;
+    }
+  }
+  if (changed) {
+    sheet.getRange(1, 1, 1, width).setValues([header]);
+    sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold');
   }
   return sheet;
 }
