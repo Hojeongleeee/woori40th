@@ -91,6 +91,7 @@ function buildPayload(form: ApplyForm) {
     phoneFormatted: form.phone.trim(),
     cohort: form.cohort.trim(),
     agree: form.agree,
+    helpPerform: form.helpPerform, // 공연 도움 의사 (선택)
   }
 }
 

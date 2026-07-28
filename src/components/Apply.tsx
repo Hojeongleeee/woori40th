@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { FormEvent, ReactNode } from 'react'
-import { COHORT_OPTIONS, FILLED_PERCENT } from '../config'
+import { COHORT_OPTIONS, FILLED_PERCENT, HELP_PERFORM } from '../config'
 import type { ApplyForm } from '../types'
 import { submitApplication } from '../lib/submit'
 import {
@@ -21,7 +21,31 @@ type Status =
   | { kind: 'success'; simulated?: boolean }
   | { kind: 'error'; message: string }
 
-const EMPTY: ApplyForm = { name: '', phone: '', cohort: '', agree: false }
+const EMPTY: ApplyForm = {
+  name: '',
+  phone: '',
+  cohort: '',
+  agree: false,
+  helpPerform: false,
+}
+
+/** 문의 문장 안의 전화번호만 전화 걸기 링크로. */
+function ContactLine() {
+  const [before, after] = HELP_PERFORM.contact.split(HELP_PERFORM.contactPhone)
+  if (after === undefined) return <>{HELP_PERFORM.contact}</>
+  return (
+    <>
+      {before}
+      <a
+        href={`tel:${HELP_PERFORM.contactPhone.replace(/-/g, '')}`}
+        className="font-semibold text-marigold underline decoration-marigold/40 underline-offset-4 transition-colors hover:decoration-marigold"
+      >
+        {HELP_PERFORM.contactPhone}
+      </a>
+      {after}
+    </>
+  )
+}
 
 export default function Apply() {
   const [form, setForm] = useState<ApplyForm>(EMPTY)
@@ -196,6 +220,58 @@ export default function Apply() {
                 </label>
                 {errors.agree && <p className="mt-1.5 pl-8 text-sm text-red-300">{errors.agree}</p>}
               </div>
+
+              {/* 공연 도움 모집 — 눌러서 펼치는 안내 (선택 항목) */}
+              <details className="group border border-marigold/30 bg-marigold/[0.05]">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3.5 text-sm font-semibold text-marigold [&::-webkit-details-marker]:hidden">
+                  {HELP_PERFORM.summary}
+                  <svg
+                    aria-hidden
+                    className="h-4 w-4 shrink-0 transition-transform duration-300 group-open:rotate-180"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </summary>
+
+                <div className="border-t border-marigold/20 px-4 pb-4 pt-4">
+                  <p className="font-semibold text-cream">{HELP_PERFORM.title}</p>
+                  <p className="mt-1.5 text-sm font-medium text-marigold">
+                    {HELP_PERFORM.deadline}
+                  </p>
+
+                  <ul className="mt-3 space-y-2">
+                    {HELP_PERFORM.points.map((point) => (
+                      <li
+                        key={point}
+                        className="flex items-start gap-2.5 text-sm leading-relaxed text-cream/75"
+                      >
+                        <span className="mt-1.5 inline-block h-1.5 w-1.5 shrink-0 rotate-45 bg-marigold" />
+                        <span className="break-keep">{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <p className="mt-4 text-sm leading-relaxed text-cream/75 break-keep">
+                    <ContactLine />
+                  </p>
+
+                  <label className="mt-4 flex cursor-pointer items-start gap-3 border border-marigold/40 bg-marigold/10 p-3.5 text-sm text-cream">
+                    <input
+                      type="checkbox"
+                      checked={form.helpPerform}
+                      onChange={(e) => update('helpPerform', e.target.checked)}
+                      className="mt-0.5 h-5 w-5 shrink-0 cursor-pointer accent-marigold"
+                    />
+                    <span className="font-medium">{HELP_PERFORM.checkboxLabel}</span>
+                  </label>
+                </div>
+              </details>
 
               {/* 전송 오류 안내 */}
               {status.kind === 'error' && (

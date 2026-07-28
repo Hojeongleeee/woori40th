@@ -4,6 +4,8 @@ export interface ApplyForm {
   phone: string
   cohort: string
   agree: boolean
+  /** 공연 도움 의사 (선택) */
+  helpPerform: boolean
 }
 
 /** 제출 결과 */

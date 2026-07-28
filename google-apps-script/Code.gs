@@ -4,14 +4,17 @@
  * 이 스크립트를 구글 시트에 붙여넣고 "웹앱"으로 배포하면,
  * 초대장 사이트의 신청 폼에서 보낸 데이터가 시트에 한 줄씩 쌓입니다.
  *
- * 시트 컬럼(자동 생성): 신청시각 | 이름 | 핸드폰번호 | 기수 | 동의여부
+ * 시트 컬럼(자동 생성): 신청시각 | 이름 | 핸드폰번호 | 기수 | 동의여부 | 공연도움
+ *
+ * ※ 이미 만들어진 시트라면 부족한 열 제목은 자동으로 덧붙습니다.
+ *   (스크립트를 수정한 뒤 반드시 "새 버전으로 배포" 해야 반영됩니다)
  *
  * 자세한 배포 방법은 프로젝트 루트의 GOOGLE_SHEET_SETUP.md 를 참고하세요.
  */
 
 // 데이터가 쌓일 시트(탭) 이름. 없으면 자동으로 만들어집니다.
 var SHEET_NAME = '신청';
-var HEADERS = ['신청시각', '이름', '핸드폰번호', '기수', '동의여부'];
+var HEADERS = ['신청시각', '이름', '핸드폰번호', '기수', '동의여부', '공연도움'];
 
 /**
  * POST 요청 처리 — 초대장 폼에서 호출됩니다.
@@ -28,6 +31,7 @@ function doPost(e) {
     var phoneDigits = String(data.phone || phoneRaw).replace(/[^0-9]/g, '');
     var cohort = String(data.cohort || '').trim();
     var agree = data.agree ? 'Y' : 'N';
+    var helpPerform = data.helpPerform ? 'Y' : 'N';
 
     // 필수값 검증
     if (!name || !phoneDigits || !cohort || !data.agree) {
@@ -47,7 +51,7 @@ function doPost(e) {
 
     var now = Utilities.formatDate(new Date(), 'Asia/Seoul', 'yyyy-MM-dd HH:mm:ss');
     // 저장은 하이픈 포함 보기 좋은 형태로
-    sheet.appendRow([now, name, phoneRaw || phoneDigits, cohort, agree]);
+    sheet.appendRow([now, name, phoneRaw || phoneDigits, cohort, agree, helpPerform]);
 
     return json_({ result: 'success' });
   } catch (err) {
@@ -88,6 +92,17 @@ function getSheet_() {
     sheet.appendRow(HEADERS);
     sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold');
     sheet.setFrozenRows(1);
+    return sheet;
+  }
+
+  // 이미 쓰던 시트라면, 나중에 늘어난 열 제목만 뒤에 덧붙인다.
+  var lastCol = sheet.getLastColumn();
+  if (lastCol < HEADERS.length) {
+    var missing = HEADERS.slice(lastCol);
+    sheet
+      .getRange(1, lastCol + 1, 1, missing.length)
+      .setValues([missing])
+      .setFontWeight('bold');
   }
   return sheet;
 }
