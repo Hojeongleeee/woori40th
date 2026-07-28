@@ -21,8 +21,9 @@ import EventSummary from './components/EventSummary'
  * Part 2 — 창립제(Chapter 03 · Autumn · Homecoming):
  *   행사 소개 → 프로그램 → 즐길거리 → 비밀 굿즈 → 갤러리 → 참가 신청 → 푸터
  *
- * 배경은 낮의 청량함(라이트) → 블루아워/밤(딥블루)으로 하늘빛이 짙어지고,
- * 포스터의 하프톤 도트 블룸이 전 섹션을 하나로 잇는다.
+ * 팔레트는 최종 포스터(ref/poster_image.png) 그대로 — 매리골드 앰버·흰 여백·검정 활자 셋뿐.
+ * 섹션은 앰버(히어로) → 화이트 → 블랙 → 화이트 → 앰버(럭키 드로우) → 블랙으로 번갈아 가고,
+ * 하프톤 도트 스크린이 그 전환을 하나로 잇는다.
  */
 export default function App() {
   return (

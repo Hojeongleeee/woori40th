@@ -3,31 +3,33 @@
 /* ------------------------------------------------------------------ */
 /*  Woori 40th — 디자인 토큰                                            */
 /*  컨셉: Scent of Memory — 40년의 추억을 담은 하나의 향수               */
-/*  포스터 무드: BLUE HOUR. 하프톤 도트, 청량한 화이트, 하늘빛 블루.      */
-/*  스크롤 서사: 낮의 청량함(라이트) → 블루아워(딥블루) → 밤(어비스)     */
+/*  기준: ref/poster_image.png (최종 포스터)                            */
+/*                                                                     */
+/*  포스터의 팔레트는 단 세 가지 —                                       */
+/*    · 매리골드 앰버 (#EEB437) : 하프톤 도트로 화면을 채우는 시그니처     */
+/*    · 화이트/크림            : 도트가 사라지며 드러나는 여백            */
+/*    · 블랙                   : 모든 활자                              */
+/*  갈색·블루 계열은 쓰지 않는다. 대비는 오직 앰버와 검정으로.            */
 /* ------------------------------------------------------------------ */
 @theme {
-  /* 베이스 노트 — 오래된 선배들의 추억 (우디하고 묵직한 잔향) */
-  --color-ink: #1c120c;
-  --color-cocoa: #2f1d13;
-  --color-espresso: #422a19;
+  /* 잉크 — 포스터의 검정 활자 */
+  --color-ink: #121110;
+  --color-soot: #1c1a17;
+  --color-graphite: #3a352d;
+  --color-stone: #6e6558;
 
-  /* 미들 노트 — 중간 기수 (깊고 은은하게 이어주는 중심) */
-  --color-latte: #8a6a4c;
-  --color-sand: #c9a97e;
-  --color-cream: #f6e6c8;
+  /* 페이퍼 — 도트가 흩어지며 드러나는 흰 여백 */
+  --color-paper: #fffdf7;
+  --color-cream: #f9eac8;
+  --color-honey: #f5d794;
 
-  /* 탑 노트 — 신세대 기수 (산뜻하고 프레쉬한 첫인상) */
-  --color-aqua: #e6f2f0;
-  --color-mist: #f4f8f7;
+  /* 매리골드 — 포스터의 시그니처 앰버 */
+  --color-marigold: #eeb437;
+  --color-amber: #e0991b;
 
-  /* 포인트 컬러 */
-  --color-gold: #e6b45a;
-  --color-golddeep: #c9922f;
-
-  /* 폰트 */
-  --font-display: 'Cormorant', 'Nanum Myeongjo', ui-serif, Georgia, serif;
-  --font-serif: 'Nanum Myeongjo', 'Cormorant', ui-serif, Georgia, serif;
+  /* 폰트 — 포스터는 하이컨트라스트 세리프(스크립트 이니셜) + 지오메트릭 산세리프 */
+  --font-display: 'Playfair Display', 'Nanum Myeongjo', ui-serif, Georgia, serif;
+  --font-serif: 'Nanum Myeongjo', 'Playfair Display', ui-serif, Georgia, serif;
   --font-sans: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont,
     system-ui, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', Roboto, sans-serif;
 
@@ -80,13 +82,13 @@
   body {
     font-family: var(--font-sans);
     color: var(--color-ink);
-    background-color: var(--color-mist);
+    background-color: var(--color-paper);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     overflow-x: hidden;
   }
 
-  /* 한글 제목은 산세리프로 (포스터의 에디토리얼 그로테스크 무드) */
+  /* 포스터의 제목은 전부 산세리프 그로테스크. 스크립트는 이니셜에만 쓴다. */
   h1,
   h2,
   h3 {
@@ -96,7 +98,7 @@
   }
 
   ::selection {
-    background: color-mix(in srgb, var(--color-gold) 45%, transparent);
+    background: var(--color-marigold);
     color: var(--color-ink);
   }
 }
@@ -119,23 +121,44 @@
     transform: none;
   }
 
-  /* 영문 디스플레이 (Cormorant) — 포스터의 우아한 세리프 */
+  /* 영문 라벨 — 포스터의 "WOORI 40th", "Chapter 03 Autumn", "2026.08.22 Sat".
+     세리프가 아니라 담백한 산세리프다. */
   .font-en {
-    font-family: var(--font-display);
+    font-family: var(--font-sans);
     font-weight: 500;
-    letter-spacing: 0.01em;
+    letter-spacing: 0.02em;
   }
 
-  /* 포스터의 시그니처 — 하프톤 도트 필드.
-     currentColor 를 쓰므로 text-gold/40 같은 클래스로 색·투명도를 제어. */
+  /* 포스터 타이틀의 이니셜 — 하이컨트라스트 디도네 이탤릭 (S, M) */
+  .font-script {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 500;
+  }
+
+  /* 포스터 하단의 굵은 워드마크 — "HOMECOMING" */
+  .wordmark {
+    font-family: var(--font-sans);
+    font-weight: 800;
+    letter-spacing: -0.015em;
+    line-height: 0.9;
+  }
+
+  /* 포스터의 시그니처 — 하프톤 도트 스크린.
+     currentColor 를 쓰므로 text-marigold/60 같은 클래스로 색·농도를 제어. */
   .dots {
-    background-image: radial-gradient(currentColor 1.25px, transparent 1.55px);
-    background-size: 9px 9px;
+    background-image: radial-gradient(currentColor 1.3px, transparent 1.6px);
+    background-size: 8px 8px;
     background-position: 0 0;
   }
   .dots-lg {
-    background-image: radial-gradient(currentColor 1.7px, transparent 2px);
-    background-size: 14px 14px;
+    background-image: radial-gradient(currentColor 1.9px, transparent 2.2px);
+    background-size: 13px 13px;
+  }
+  /* 포스터 실물의 굵은 스크린 (근거리에서 도트가 또렷하게 보이는 결) */
+  .dots-xl {
+    background-image: radial-gradient(currentColor 2.6px, transparent 3px);
+    background-size: 18px 18px;
   }
 
   /* 은은한 빛번짐(향이 퍼지는) 원형 광원 */
@@ -143,14 +166,6 @@
     border-radius: 9999px;
     filter: blur(64px);
     pointer-events: none;
-  }
-
-  /* 고급스러운 골드 그라데이션 텍스트 */
-  .text-gold-gradient {
-    background: linear-gradient(120deg, #f3d999 0%, var(--color-gold) 45%, #b9821f 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
   }
 
   /* 앵커 스크롤 시 상단 고정바에 가리지 않도록 */

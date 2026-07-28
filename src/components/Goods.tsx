@@ -2,8 +2,8 @@ import { GOODS } from '../config'
 import Reveal from './Reveal'
 import Halftone from './Halftone'
 
-/** 가을·우디를 상징하는 앰버 포인트 (오브제의 향 계열 힌트) — 다크 배경용으로 밝게 */
-const AMBER_HEX = '#dca24a'
+/** 포스터의 매리골드 앰버 — 검정 배경 위 포인트 컬러 */
+const AMBER_HEX = '#eeb437'
 
 /**
  * 창립제 굿즈 — 비밀에 부친 40주년 기념 오브제.
@@ -13,9 +13,9 @@ export default function Goods() {
   return (
     <section
       id="goods"
-      className="anchor-offset relative overflow-hidden bg-gradient-to-b from-cocoa via-ink to-ink px-6 py-24 sm:py-32"
+      className="anchor-offset relative overflow-hidden bg-ink px-6 py-24 sm:py-32"
     >
-      <Halftone colorClass="text-gold" opacity={0.16} variant="sideLeft" />
+      <Halftone colorClass="text-marigold" opacity={0.26} variant="sideLeft" coarse />
 
       <div className="relative z-10 mx-auto max-w-4xl">
         <Reveal className="text-center">
@@ -28,25 +28,25 @@ export default function Goods() {
           <h2 className="text-3xl text-cream sm:text-4xl">{GOODS.title}</h2>
           <div
             className="mx-auto mt-6 h-px w-14"
-            style={{ background: `linear-gradient(90deg, transparent, ${AMBER_HEX}, transparent)` }}
+            style={{ background: AMBER_HEX }}
           />
         </Reveal>
 
         <div className="mt-14 grid items-center gap-8 sm:grid-cols-2 sm:gap-10">
           {/* 봉인된 오브제 */}
           <Reveal>
-            <div className="relative mx-auto flex aspect-square w-full max-w-sm items-center justify-center overflow-hidden rounded-3xl border border-dashed border-cream/15 bg-white/[0.04]">
-              <span className="dots absolute inset-0 text-gold/15" aria-hidden />
+            <div className="relative mx-auto flex aspect-square w-full max-w-sm items-center justify-center overflow-hidden rounded-none border border-dashed border-cream/15 bg-white/[0.04]">
+              <span className="dots-lg absolute inset-0 text-marigold/25" aria-hidden />
               {/* 흐릿한 향의 광원 */}
               <span
                 className="absolute h-40 w-40 rounded-full blur-2xl"
                 style={{ background: `${AMBER_HEX}55` }}
               />
-              <span className="absolute h-28 w-28 rounded-full bg-gold/25 blur-2xl" />
+              <span className="absolute h-28 w-28 rounded-full bg-marigold/25 blur-2xl" />
               {/* 자물쇠 */}
               <div className="relative z-10 flex flex-col items-center gap-4">
                 <span
-                  className="grid h-16 w-16 place-items-center rounded-full border bg-cocoa/60 backdrop-blur-sm"
+                  className="grid h-16 w-16 place-items-center rounded-full border bg-ink/60 backdrop-blur-sm"
                   style={{ borderColor: `${AMBER_HEX}66`, color: AMBER_HEX }}
                 >
                   <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">

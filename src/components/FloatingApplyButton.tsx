@@ -33,7 +33,9 @@ export default function FloatingApplyButton() {
   return (
     <a
       href="#apply"
-      className={`fixed bottom-5 right-5 z-40 flex items-center gap-2 rounded-full border border-gold/40 bg-gradient-to-r from-gold to-golddeep px-5 py-3 text-sm font-semibold text-ink shadow-[0_10px_30px_-8px_rgba(201,146,47,0.55)] ring-1 ring-white/20 transition-all duration-500 hover:scale-[1.03] hover:shadow-[0_14px_36px_-8px_rgba(201,146,47,0.7)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream ${
+      /* 밝은 앰버 섹션·흰 섹션·검정 섹션 어디에 떠 있어도 읽히도록
+         검정 알약 + 매리골드 링 조합으로 고정 */
+      className={`fixed bottom-5 right-5 z-40 flex items-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-semibold text-marigold shadow-[0_10px_30px_-8px_rgba(18,17,16,0.5)] ring-1 ring-marigold transition-all duration-500 hover:scale-[1.03] hover:shadow-[0_14px_36px_-8px_rgba(18,17,16,0.65)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marigold ${
         visible
           ? 'pointer-events-auto translate-y-0 opacity-100'
           : 'pointer-events-none translate-y-4 opacity-0'
@@ -42,8 +44,8 @@ export default function FloatingApplyButton() {
       tabIndex={visible ? 0 : -1}
     >
       <span className="relative flex h-2 w-2">
-        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-ink/50" />
-        <span className="relative inline-flex h-2 w-2 rounded-full bg-ink" />
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-marigold/60" />
+        <span className="relative inline-flex h-2 w-2 rounded-full bg-marigold" />
       </span>
       참가 신청하기
     </a>

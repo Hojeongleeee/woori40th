@@ -78,18 +78,18 @@ export default function Apply() {
   return (
     <section
       id="apply"
-      className="anchor-offset relative overflow-hidden bg-gradient-to-b from-ink to-[#150c07] px-6 py-24 sm:py-28"
+      className="anchor-offset relative overflow-hidden bg-ink px-6 py-24 sm:py-28"
     >
-      <Halftone colorClass="text-gold" opacity={0.14} variant="sideLeft" />
+      <Halftone colorClass="text-marigold" opacity={0.24} variant="sideLeft" coarse />
 
       <div className="relative z-10 mx-auto max-w-xl">
         <Reveal className="text-center">
-          <p className="mb-4 text-xs font-medium uppercase tracking-[0.34em] text-gold">
+          <p className="mb-4 font-en text-xs font-semibold uppercase tracking-[0.34em] text-marigold">
             RSVP · Chapter 03 Homecoming
           </p>
           <h2 className="text-3xl text-cream sm:text-4xl">창립제 참가 신청</h2>
           <p className="mt-4 text-sm leading-relaxed text-cream/70">
-            좌석이 한정되어 있어 <span className="text-gold">선착순 사전 신청</span>을 받습니다.
+            좌석이 한정되어 있어 <span className="text-marigold">선착순 사전 신청</span>을 받습니다.
             <br />
             자리가 채워지는 대로 마감되니 서둘러 주세요.
           </p>
@@ -97,18 +97,18 @@ export default function Apply() {
 
         {/* 마감 현황 바 (항상 보이도록 상단바에도 있지만, 여기서 크게 한 번 더) */}
         <Reveal delay={100} className="mt-8">
-          <div className="rounded-2xl border border-cream/10 bg-white/[0.04] p-5">
+          <div className="rounded-none border border-cream/15 bg-soot p-5">
             <div className="flex items-end justify-between">
               <span className="text-sm text-cream/70">신청 마감 현황</span>
-              <span className="font-en text-2xl font-semibold text-gold">{pct}%</span>
+              <span className="font-en text-2xl font-semibold text-marigold">{pct}%</span>
             </div>
             <div className="mt-3 h-2.5 w-full overflow-hidden rounded-full bg-white/10">
               <div
-                className="h-full rounded-full bg-gradient-to-r from-gold via-gold to-golddeep transition-[width] duration-700 ease-out"
+                className="h-full rounded-full bg-marigold transition-[width] duration-700 ease-out"
                 style={{ width: `${pct}%` }}
               />
             </div>
-            <p className="mt-3 flex items-center gap-1.5 text-sm text-gold/90">
+            <p className="mt-3 flex items-center gap-1.5 text-sm text-marigold/90">
               <SparkleIcon className="h-3.5 w-3.5" />
               선착순 {LUCKY_DRAW.doorPrizeCount}명에게는 <b className="font-semibold">웰컴 선물</b>을 드려요.
             </p>
@@ -123,7 +123,7 @@ export default function Apply() {
             <form
               onSubmit={handleSubmit}
               noValidate
-              className="space-y-5 rounded-2xl border border-cream/10 bg-white/[0.03] p-6 sm:p-8"
+              className="space-y-5 border border-cream/15 bg-soot p-6 sm:p-8"
             >
               <Field label="이름" htmlFor="name" required error={errors.name}>
                 <input
@@ -189,7 +189,7 @@ export default function Apply() {
                     type="checkbox"
                     checked={form.agree}
                     onChange={(e) => update('agree', e.target.checked)}
-                    className="mt-0.5 h-5 w-5 shrink-0 cursor-pointer accent-gold"
+                    className="mt-0.5 h-5 w-5 shrink-0 cursor-pointer accent-marigold"
                   />
                   <span>
                     <b className="font-medium text-cream">개인정보 제공에 동의합니다.</b>{' '}
@@ -204,7 +204,7 @@ export default function Apply() {
 
               {/* 전송 오류 안내 */}
               {status.kind === 'error' && (
-                <p className="rounded-lg border border-red-400/30 bg-red-400/10 px-4 py-3 text-sm text-red-200">
+                <p className="rounded-none border border-red-400/30 bg-red-400/10 px-4 py-3 text-sm text-red-200">
                   {status.message}
                 </p>
               )}
@@ -212,7 +212,7 @@ export default function Apply() {
               <button
                 type="submit"
                 disabled={submitting || !form.agree}
-                className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-gold to-golddeep py-4 text-base font-semibold text-ink shadow-[0_12px_30px_-10px_rgba(201,146,47,0.6)] transition-all hover:shadow-[0_16px_36px_-10px_rgba(201,146,47,0.75)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
+                className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-marigold py-4 text-base font-semibold text-ink shadow-[0_12px_30px_-10px_rgba(238,180,55,0.6)] transition-all hover:shadow-[0_16px_36px_-10px_rgba(238,180,55,0.75)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
               >
                 {submitting ? (
                   <>
@@ -252,7 +252,7 @@ function Field({
     <div>
       <label htmlFor={htmlFor} className="mb-1.5 block text-sm font-medium text-cream/85">
         {label}
-        {required && <span className="ml-1 text-gold">*</span>}
+        {required && <span className="ml-1 text-marigold">*</span>}
       </label>
       {children}
       {error && <p className="mt-1.5 text-sm text-red-300">{error}</p>}
@@ -261,30 +261,30 @@ function Field({
 }
 
 function inputCls(hasError: boolean): string {
-  return `w-full rounded-xl border bg-ink/40 px-4 py-3 text-cream placeholder:text-cream/30 outline-none transition-colors focus:border-gold focus:ring-2 focus:ring-gold/30 ${
+  return `w-full rounded-none border bg-ink/40 px-4 py-3 text-cream placeholder:text-cream/30 outline-none transition-colors focus:border-marigold focus:ring-2 focus:ring-marigold/30 ${
     hasError ? 'border-red-400/60' : 'border-cream/15'
   }`
 }
 
 function SuccessCard({ name, simulated }: { name: string; simulated?: boolean }) {
   return (
-    <div className="rounded-2xl border border-gold/30 bg-gold/[0.06] p-8 text-center">
-      <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-gradient-to-br from-gold to-golddeep text-ink">
+    <div className="rounded-none border border-marigold/30 bg-marigold/[0.06] p-8 text-center">
+      <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-marigold text-ink">
         <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M4 12l5 5L20 6" />
         </svg>
       </div>
       <h3 className="mt-5 text-2xl text-cream">신청이 완료되었어요!</h3>
       <p className="mt-3 text-sm leading-relaxed text-cream/75">
-        <b className="text-gold">{name}</b>님, 40주년 창립제에서 만나요.
+        <b className="text-marigold">{name}</b>님, 40주년 창립제에서 만나요.
         <br />
         자세한 장소와 안내는 신청해 주신 번호로 따로 연락드릴게요.
       </p>
       {simulated && (
-        <p className="mt-5 rounded-lg border border-gold/30 bg-gold/10 px-3 py-2 text-sm text-gold/90">
+        <p className="mt-5 rounded-none border border-marigold/30 bg-marigold/10 px-3 py-2 text-sm text-marigold/90">
           ⚙️ 테스트 모드입니다 — 실제 시트에는 저장되지 않았어요.
           <br />
-          <span className="text-gold/70">
+          <span className="text-marigold/70">
             config.ts 의 GOOGLE_SHEET_ENDPOINT 를 설정하면 실제로 저장됩니다.
           </span>
         </p>

@@ -52,9 +52,9 @@ export const INTENT = {
 
 /* ------------------------------------------------------------------
  *  5) 사계절 4개 챕터 (향수 컬렉션)
- *     - accent: 계절/향을 상징하는 포인트 컬러 (카드 개별성)
- *       색상은 브랜드 톤(뉴트럴 브라운)으로 통일하고,
- *       중심 이벤트인 창립제(Autumn)만 골드로 강조한다.
+ *     - accent: 계절을 표시하는 포인트 컬러
+ *       포스터 팔레트에 맞춰 검정(잉크)으로 통일하고,
+ *       중심 이벤트인 창립제(Autumn)만 매리골드 앰버로 강조한다.
  *     - current: 이 사이트가 초대하는 중심 이벤트(창립제) 여부
  * ------------------------------------------------------------------ */
 export const CHAPTERS = [
@@ -67,7 +67,7 @@ export const CHAPTERS = [
     keywords: ['시작', '설렘', '첫 페이지'],
     scent: '플라워 계열',
     note: '첫 페이지를 여는 설렘. 봄의 꽃향으로 컬렉션의 문을 엽니다.',
-    accent: '#8a6a4c',
+    accent: '#3a352d',
     current: false,
   },
   {
@@ -79,7 +79,7 @@ export const CHAPTERS = [
     keywords: ['청춘', '에너지', '열기'],
     scent: '시트러스·청량 계열',
     note: '하늘이 가장 푸르게 물드는 시간. 청량한 시트러스로 채우는 청춘의 열기.',
-    accent: '#8a6a4c',
+    accent: '#3a352d',
     current: false,
   },
   {
@@ -91,7 +91,7 @@ export const CHAPTERS = [
     keywords: ['추억', '시간', '축적'],
     scent: '우디·머스크 계열',
     note: '오래된 악보와 추억의 온기를 닮은 깊은 우디·머스크의 잔향.',
-    accent: '#c9922f',
+    accent: '#eeb437',
     current: true,
   },
   {
@@ -103,7 +103,7 @@ export const CHAPTERS = [
     keywords: ['여운', '정리', '다음 시작'],
     scent: '비누향 계열',
     note: '한 해를 정리하는 잔향. 깨끗한 비누향으로 여운을 남기고 다음을 준비합니다.',
-    accent: '#8a6a4c',
+    accent: '#3a352d',
     current: false,
   },
 ] as const

@@ -11,22 +11,22 @@ export default function ProgressBar() {
   return (
     <div className="fixed inset-x-0 top-0 z-40">
       {/* 최상단 진행 라인 */}
-      <div className="h-[3px] w-full bg-ink/30">
+      <div className="h-[3px] w-full bg-ink/40">
         <div
-          className="h-full bg-gradient-to-r from-gold via-gold to-golddeep transition-[width] duration-700 ease-out"
+          className="h-full bg-marigold transition-[width] duration-700 ease-out"
           style={{ width: `${pct}%` }}
         />
       </div>
 
       {/* 정보 바 */}
-      <div className="border-b border-white/10 bg-ink/70 backdrop-blur-md">
+      <div className="border-b border-marigold/20 bg-ink/85 backdrop-blur-md">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-2 sm:px-6">
           <a
             href="#top"
-            className="font-en text-sm tracking-wide text-cream/90 sm:text-base"
+            className="font-en text-sm font-semibold tracking-wide text-cream sm:text-base"
             aria-label="맨 위로"
           >
-            Woori <span className="text-gold-gradient italic">40th</span>
+            WOORI <span className="text-marigold">40th</span>
           </a>
 
           <div className="flex items-center gap-2 sm:gap-3">
@@ -40,7 +40,7 @@ export default function ProgressBar() {
               aria-label="신청 마감 현황"
             >
               <div
-                className="h-full rounded-full bg-gradient-to-r from-gold to-golddeep"
+                className="h-full rounded-full bg-marigold"
                 style={{ width: `${pct}%` }}
               />
             </div>
