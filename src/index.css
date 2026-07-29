@@ -172,6 +172,15 @@
   .anchor-offset {
     scroll-margin-top: 72px;
   }
+
+  /* 가로 스와이프 영역 — 스크롤바는 감추고 손가락/화살표로만 넘긴다 (갤러리) */
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 /* 움직임 최소화를 선호하는 사용자 배려 */

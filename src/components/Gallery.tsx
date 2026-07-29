@@ -1,26 +1,82 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { GALLERY_IMAGES } from '../config'
 import { CloseIcon } from './Icons'
 import Reveal from './Reveal'
 import Halftone from './Halftone'
 
 /**
- * 추억 사진 갤러리 — 그리드 + 라이트박스.
+ * 추억 사진 갤러리 — 3×3 페이지를 좌우로 넘겨 보는 캐러셀 + 라이트박스.
+ *
+ * 사진이 계속 늘어날 예정이라 세로로 길어지지 않도록 9장씩 끊어 가로로 넘긴다.
+ * 넘기는 건 브라우저의 가로 스크롤 + scroll-snap 에 맡겨서 (transform 이 아니라)
+ * 모바일에서 손가락 스와이프가 그대로 동작하고, 화살표는 그 스크롤을 움직인다.
  * 사진은 config.ts 의 GALLERY_IMAGES 배열에서 가져옵니다.
  */
+
+/** 한 페이지에 보여줄 사진 수 (3×3) */
+const PAGE_SIZE = 9
+
 export default function Gallery() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
+  const trackRef = useRef<HTMLDivElement>(null)
+  const [page, setPage] = useState(0)
 
-  const close = useCallback(() => setOpenIndex(null), [])
+  const pages: (typeof GALLERY_IMAGES)[] = []
+  for (let i = 0; i < GALLERY_IMAGES.length; i += PAGE_SIZE) {
+    pages.push(GALLERY_IMAGES.slice(i, i + PAGE_SIZE))
+  }
+
+  /** 라이트박스에서 보던 사진의 위치를 닫을 때 참고하기 위한 거울 */
+  const openRef = useRef<number | null>(null)
+  useEffect(() => {
+    openRef.current = openIndex
+  }, [openIndex])
+
+  /**
+   * 라이트박스 닫기.
+   * 다른 묶음의 사진까지 넘겨봤다면 그 묶음을 펼쳐 둔 채로 닫는다 —
+   * 23번 사진을 보다 닫았는데 1번 묶음이 떠 있으면 위치를 잃어버린다.
+   */
+  const close = useCallback(() => {
+    const cur = openRef.current
+    const el = trackRef.current
+    if (cur !== null && el && el.clientWidth > 0) {
+      const target = Math.floor(cur / PAGE_SIZE)
+      if (Math.round(el.scrollLeft / el.clientWidth) !== target) {
+        el.scrollTo({ left: target * el.clientWidth, behavior: 'auto' })
+      }
+    }
+    setOpenIndex(null)
+  }, [])
+
   const show = useCallback(
     (dir: number) =>
       setOpenIndex((cur) => {
         if (cur === null) return cur
-        const next = (cur + dir + GALLERY_IMAGES.length) % GALLERY_IMAGES.length
-        return next
+        return (cur + dir + GALLERY_IMAGES.length) % GALLERY_IMAGES.length
       }),
     [],
   )
+
+  const goTo = useCallback((p: number, smooth = true) => {
+    const el = trackRef.current
+    if (!el) return
+    el.scrollTo({ left: p * el.clientWidth, behavior: smooth ? 'smooth' : 'auto' })
+  }, [])
+
+  // 스와이프/스크롤로 넘어간 페이지를 점 표시에 반영
+  const syncPage = useCallback(() => {
+    const el = trackRef.current
+    if (!el || el.clientWidth === 0) return
+    setPage(Math.round(el.scrollLeft / el.clientWidth))
+  }, [])
+
+  // 창 크기가 바뀌면 px 기준 위치가 어긋나므로 현재 페이지로 다시 맞춘다
+  useEffect(() => {
+    const onResize = () => goTo(page, false)
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [page, goTo])
 
   // 키보드 조작 (Esc 닫기, ← → 이동)
   useEffect(() => {
@@ -57,29 +113,80 @@ export default function Gallery() {
           <div className="mx-auto mt-6 h-px w-14 bg-ink" />
         </Reveal>
 
-        <div className="mt-14 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
-          {GALLERY_IMAGES.map((img, i) => (
-            <Reveal key={img.src} delay={(i % 3) * 70}>
-              <button
-                type="button"
-                onClick={() => setOpenIndex(i)}
-                className="group relative block aspect-square w-full overflow-hidden border border-ink/15 bg-paper"
+        <Reveal delay={80}>
+          {/* 가로로 넘기는 3×3 페이지 */}
+          <div
+            ref={trackRef}
+            onScroll={syncPage}
+            className="no-scrollbar mt-14 flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain"
+            role="group"
+            aria-label="추억 사진 모음 — 좌우로 넘겨 보세요"
+          >
+            {pages.map((group, p) => (
+              <div
+                key={p}
+                className="grid w-full shrink-0 snap-start grid-cols-3 gap-3 sm:gap-4"
+                aria-label={`${p + 1}번째 묶음`}
               >
-                <img
-                  src={img.src}
-                  alt={img.caption ?? `Woori 추억 사진 ${i + 1}`}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                {img.caption && (
-                  <span className="absolute inset-x-0 bottom-0 translate-y-2 bg-gradient-to-t from-ink/90 to-transparent px-3 pb-2 pt-8 text-left text-sm text-cream/90 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                    {img.caption}
-                  </span>
-                )}
-              </button>
-            </Reveal>
-          ))}
-        </div>
+                {group.map((img, j) => {
+                  const i = p * PAGE_SIZE + j
+                  return (
+                    <button
+                      key={img.src}
+                      type="button"
+                      onClick={() => setOpenIndex(i)}
+                      className="group relative block aspect-square w-full overflow-hidden border border-ink/15 bg-paper focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+                    >
+                      <img
+                        src={img.src}
+                        alt={img.caption ?? `Woori 추억 사진 ${i + 1}`}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      {img.caption && (
+                        <span className="absolute inset-x-0 bottom-0 translate-y-2 bg-gradient-to-t from-ink/90 to-transparent px-3 pb-2 pt-8 text-left text-sm text-cream/90 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                          {img.caption}
+                        </span>
+                      )}
+                    </button>
+                  )
+                })}
+              </div>
+            ))}
+          </div>
+
+          {/* 페이지 이동 — 화살표 + 점 */}
+          {pages.length > 1 && (
+            <div className="mt-7 flex items-center justify-center gap-5">
+              <PageArrow
+                dir="prev"
+                disabled={page === 0}
+                onClick={() => goTo(page - 1)}
+              />
+
+              <div className="flex items-center gap-2">
+                {pages.map((_, p) => (
+                  <button
+                    key={p}
+                    type="button"
+                    onClick={() => goTo(p)}
+                    aria-label={`${p + 1}번째 묶음 보기`}
+                    aria-current={p === page}
+                    className={`h-1.5 rounded-full transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink ${
+                      p === page ? 'w-6 bg-ink' : 'w-1.5 bg-ink/25 hover:bg-ink/50'
+                    }`}
+                  />
+                ))}
+              </div>
+
+              <PageArrow
+                dir="next"
+                disabled={page === pages.length - 1}
+                onClick={() => goTo(page + 1)}
+              />
+            </div>
+          )}
+        </Reveal>
       </div>
 
       {/* 라이트박스 */}
@@ -107,24 +214,57 @@ export default function Gallery() {
             </>
           )}
 
-          <figure
-            className="max-h-[85vh] max-w-3xl"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <figure className="max-h-[85vh] max-w-3xl" onClick={(e) => e.stopPropagation()}>
             <img
               src={GALLERY_IMAGES[openIndex].src}
               alt={GALLERY_IMAGES[openIndex].caption ?? '추억 사진'}
               className="max-h-[78vh] w-auto rounded-none object-contain shadow-2xl"
             />
-            {GALLERY_IMAGES[openIndex].caption && (
-              <figcaption className="mt-3 text-center text-sm text-cream/80">
-                {GALLERY_IMAGES[openIndex].caption}
-              </figcaption>
-            )}
+            <figcaption className="mt-3 text-center text-sm text-cream/80">
+              {GALLERY_IMAGES[openIndex].caption ?? (
+                <span className="text-cream/45">
+                  {openIndex + 1} / {GALLERY_IMAGES.length}
+                </span>
+              )}
+            </figcaption>
           </figure>
         </div>
       )}
     </section>
+  )
+}
+
+/** 페이지 넘김 화살표 (갤러리 아래 컨트롤 줄) */
+function PageArrow({
+  dir,
+  disabled,
+  onClick,
+}: {
+  dir: 'prev' | 'next'
+  disabled: boolean
+  onClick: () => void
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      aria-label={dir === 'prev' ? '이전 사진 묶음' : '다음 사진 묶음'}
+      className="grid h-10 w-10 place-items-center rounded-full border border-ink/25 text-ink transition-colors hover:border-ink hover:bg-ink hover:text-cream focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink disabled:pointer-events-none disabled:opacity-25"
+    >
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        {dir === 'prev' ? <path d="M15 5l-7 7 7 7" /> : <path d="M9 5l7 7-7 7" />}
+      </svg>
+    </button>
   )
 }
 
