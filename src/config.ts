@@ -292,6 +292,7 @@ export const LUCKY_DRAW = {
 export type GalleryImage = { src: string; caption?: string }
 
 export const GALLERY_IMAGES: GalleryImage[] = [
+  // 01~09 — 초기 기수 · 우리 뱃지 · 지난 창립제
   { src: '/gallery/01.jpg' },
   { src: '/gallery/02.jpg' },
   { src: '/gallery/03.jpg' },
@@ -301,6 +302,21 @@ export const GALLERY_IMAGES: GalleryImage[] = [
   { src: '/gallery/07.jpg' },
   { src: '/gallery/08.jpg' },
   { src: '/gallery/09.jpg' },
+  // 10~23 — 30기 무대·단체 → 야외 추억 → 기록물
+  { src: '/gallery/10.jpg' },
+  { src: '/gallery/11.jpg' },
+  { src: '/gallery/12.jpg' },
+  { src: '/gallery/13.jpg' },
+  { src: '/gallery/14.jpg' },
+  { src: '/gallery/15.jpg' },
+  { src: '/gallery/16.jpg' },
+  { src: '/gallery/17.jpg' },
+  { src: '/gallery/18.jpg' },
+  { src: '/gallery/19.jpg' },
+  { src: '/gallery/20.jpg' },
+  { src: '/gallery/21.jpg' },
+  { src: '/gallery/22.jpg' },
+  { src: '/gallery/23.jpg' },
 ]
 
 /* ------------------------------------------------------------------
@@ -309,19 +325,45 @@ export const GALLERY_IMAGES: GalleryImage[] = [
 export const COHORT_OPTIONS: string[] = []
 
 /* ------------------------------------------------------------------
- *  13) 창립제 장소 (Venue) — 소개 사진 + 한 줄 캡션
- *      photos[].image 에 4:3 비율 이미지를 넣으면 표시되고, 비우면 플레이스홀더.
- *      photos 개수는 3~4장 권장 (자유롭게 추가/삭제).
+ *  13) 창립제 장소 (Venue) — 네 구역 소개
+ *
+ *  구역마다 사진 여러 장을 넣으면 그 자리에서 천천히 돌아갑니다(롤링).
+ *  images 를 비우면 "사진 준비 중" 플레이스홀더가 표시됩니다.
+ *  원본은 src/img/venue/ 에 있고, 웹용으로 줄인 것이 public/venue/ 입니다.
  * ------------------------------------------------------------------ */
 export const VENUE = {
   kicker: 'The Venue',
   title: '이런 공간에서 만나요',
   lead: '창립제가 열릴 공간을 미리 만나보세요.',
   photos: [
-    { image: '', caption: '넉넉한 홀과 무대가 있는 공간' },
-    { image: '', caption: '따뜻한 조명 아래 마련된 좌석' },
-    { image: '', caption: '한쪽에 자리한 포토존과 시향 부스' },
-    { image: '', caption: '함께 나눌 케이터링 테이블' },
+    {
+      title: '통창으로 볕이 드는 홀',
+      caption:
+        '한쪽 벽이 전부 창이라 낮에는 초록이 그대로 들어와요. 그 앞이 곧 무대가 됩니다.',
+      // 통창과 초록이 가장 잘 보이는 1-4 를 첫 장으로
+      images: [
+        '/venue/1-4.jpg',
+        '/venue/1-2.jpg',
+        '/venue/1-1.jpg',
+        '/venue/1-3.jpg',
+      ],
+    },
+    {
+      title: '밤이 되면 켜지는 라이브',
+      caption:
+        '조명이 내려앉으면 공간의 표정이 완전히 바뀝니다. 역대 창립제 중 가장 좋은 음향과 장비를 갖췄어요.',
+      images: ['/venue/2-1.jpg', '/venue/2-2.jpg', '/venue/2-3.jpg'],
+    },
+    {
+      title: '바텐더가 상주하는 바',
+      caption: '하이볼·칵테일·맥주·와인까지, 원하는 잔을 그 자리에서 받아 가세요.',
+      images: ['/venue/3-1.jpg', '/venue/3-2.jpg'],
+    },
+    {
+      title: '함께 나눌 케이터링',
+      caption: '한 접시씩 덜어 먹으며 오래 이야기하기 좋은 테이블을 준비합니다.',
+      images: ['/venue/4-1.jpg', '/venue/4-2.jpg'],
+    },
   ],
 } as const
 
