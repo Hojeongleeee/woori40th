@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import type { ReactNode } from 'react'
 import { FEE } from '../config'
 import { CheckIcon, CopyIcon, WalletIcon } from './Icons'
 
@@ -65,7 +66,37 @@ export default function FeeNotice({
 }
 
 /** 계좌번호 + 복사 버튼 — 모바일에서 번호를 직접 드래그하지 않도록. */
-function AccountBox() {
+export function AccountBox({ className = 'mt-4' }: { className?: string }) {
+  return (
+    <CopyRow
+      label="입금 계좌"
+      copyText={FEE.account.number}
+      buttonLabel="계좌번호 복사"
+      className={className}
+    >
+      {FEE.account.bank} {FEE.account.number}
+      <span className="text-cream/70"> ({FEE.account.holder})</span>
+    </CopyRow>
+  )
+}
+
+/**
+ * "라벨 + 값 + 복사 버튼" 한 줄.
+ * 계좌번호와 입금자명(신청 완료 화면)이 같은 모양을 쓰도록 빼 두었다.
+ */
+export function CopyRow({
+  label,
+  children,
+  copyText,
+  buttonLabel,
+  className = '',
+}: {
+  label: string
+  children: ReactNode
+  copyText: string
+  buttonLabel: string
+  className?: string
+}) {
   const [copied, setCopied] = useState(false)
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -75,9 +106,9 @@ function AccountBox() {
 
   async function copy() {
     try {
-      await navigator.clipboard.writeText(FEE.account.number)
+      await navigator.clipboard.writeText(copyText)
     } catch {
-      return // 클립보드 권한이 없으면 조용히 넘어간다 (번호는 화면에 그대로 보인다)
+      return // 클립보드 권한이 없으면 조용히 넘어간다 (값은 화면에 그대로 보인다)
     }
     setCopied(true)
     if (timer.current) clearTimeout(timer.current)
@@ -85,13 +116,12 @@ function AccountBox() {
   }
 
   return (
-    <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border border-marigold/40 bg-marigold/10 p-3.5">
+    <div
+      className={`flex flex-wrap items-center justify-between gap-3 border border-marigold/40 bg-marigold/10 p-3.5 text-left ${className}`}
+    >
       <div className="min-w-0">
-        <p className="text-xs text-cream/60">입금 계좌</p>
-        <p className="mt-0.5 break-all font-medium text-cream">
-          {FEE.account.bank} {FEE.account.number}
-          <span className="text-cream/70"> ({FEE.account.holder})</span>
-        </p>
+        <p className="text-xs text-cream/60">{label}</p>
+        <p className="mt-0.5 break-all font-medium text-cream">{children}</p>
       </div>
       <button
         type="button"
@@ -107,7 +137,7 @@ function AccountBox() {
         ) : (
           <>
             <CopyIcon className="h-3.5 w-3.5" />
-            계좌번호 복사
+            {buttonLabel}
           </>
         )}
       </button>

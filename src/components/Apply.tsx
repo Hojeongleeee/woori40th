@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import type { FormEvent, ReactNode } from 'react'
-import { COHORT_OPTIONS, HELP_PERFORM } from '../config'
+import { COHORT_OPTIONS, FEE, HELP_PERFORM } from '../config'
 import type { ApplyForm } from '../types'
 import { submitApplication } from '../lib/submit'
 import { bumpCount } from '../lib/sheet'
 import { useAppliedCount } from '../hooks/useAppliedCount'
-import FeeNotice from './FeeNotice'
+import FeeNotice, { AccountBox, CopyRow } from './FeeNotice'
 import {
   formatPhone,
   isValidCohort,
@@ -120,9 +120,6 @@ export default function Apply() {
             <br />
             자리가 채워지는 대로 마감되니 서둘러 주세요.
           </p>
-          <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-cream/55 break-keep">
-            사전 연락으로 참석 여부를 회신해 주신 분들도 다시 한 번 신청해 주시면 감사하겠습니다.
-          </p>
         </Reveal>
 
         {/* 마감 현황 바 (항상 보이도록 상단바에도 있지만, 여기서 크게 한 번 더) */}
@@ -156,7 +153,11 @@ export default function Apply() {
         {/* 폼 / 완료 화면 */}
         <Reveal delay={160} className="mt-8">
           {status.kind === 'success' ? (
-            <SuccessCard name={form.name} simulated={status.simulated} />
+            <SuccessCard
+              name={form.name}
+              cohort={form.cohort}
+              simulated={status.simulated}
+            />
           ) : (
             <form
               onSubmit={handleSubmit}
@@ -356,9 +357,29 @@ function inputCls(hasError: boolean): string {
   }`
 }
 
-function SuccessCard({ name, simulated }: { name: string; simulated?: boolean }) {
+/**
+ * 입금자명 추천값 — "회비" + 기수 + 이름 (예: 회비23기홍길동).
+ * 숫자만 적어 넣은 기수에는 '기' 를 붙여 준다.
+ */
+function depositMemo(name: string, cohort: string): string {
+  const c = cohort.trim().replace(/\s+/g, '')
+  const normalized = /^\d+$/.test(c) ? `${c}기` : c
+  return `회비${normalized}${name.trim().replace(/\s+/g, '')}`
+}
+
+function SuccessCard({
+  name,
+  cohort,
+  simulated,
+}: {
+  name: string
+  cohort: string
+  simulated?: boolean
+}) {
+  const memo = depositMemo(name, cohort)
+
   return (
-    <div className="rounded-none border border-marigold/30 bg-marigold/[0.06] p-8 text-center">
+    <div className="rounded-none border border-marigold/30 bg-soot/90 p-8 text-center">
       <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-marigold text-ink">
         <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M4 12l5 5L20 6" />
@@ -368,6 +389,42 @@ function SuccessCard({ name, simulated }: { name: string; simulated?: boolean })
       <p className="mt-3 text-sm leading-relaxed text-cream/75">
         <b className="text-marigold">{name}</b>님, 40주년 창립제에서 만나요.
       </p>
+
+      {/* 입금 안내 — 신청만으로는 자리가 확정되지 않으므로 여기서 한 번 더 */}
+      <div className="mt-7 border-t border-cream/15 pt-7 text-left">
+        <p className="text-center text-base font-semibold text-marigold">
+          마지막으로, 회비를 입금해 주세요
+        </p>
+        <p className="mt-2 text-center text-sm leading-relaxed text-cream/70 break-keep">
+          입금이 완료되면 참석이 최종 확정됩니다. 좌석이 한정되어 있어 양해 부탁드립니다.
+        </p>
+
+        <dl className="mt-5 grid grid-cols-3 gap-2">
+          {FEE.tiers.map((t) => (
+            <div key={t.label} className="border border-cream/15 bg-ink/70 px-2 py-3 text-center">
+              <dt className="text-xs text-cream/60">{t.label}</dt>
+              <dd className="mt-1 font-semibold text-cream">{t.amount}</dd>
+            </div>
+          ))}
+        </dl>
+
+        <AccountBox className="mt-4" />
+
+        <CopyRow
+          label="입금자명 (이대로 적어 주세요)"
+          copyText={memo}
+          buttonLabel="입금자명 복사"
+          className="mt-3"
+        >
+          {memo}
+        </CopyRow>
+
+        <p className="mt-4 text-sm leading-relaxed text-cream/60 break-keep">
+          행사에 참석하지 못하시더라도 후배들을 위한 후원금을 보내주실 수 있어요. 그때는
+          <b className="font-medium text-cream/80"> 후원{memo.replace(/^회비/, '')}</b> 으로 적어
+          주세요.
+        </p>
+      </div>
       {simulated && (
         <p className="mt-5 rounded-none border border-marigold/30 bg-marigold/10 px-3 py-2 text-sm text-marigold/90">
           ⚙️ 테스트 모드입니다 — 실제 시트에는 저장되지 않았어요.
