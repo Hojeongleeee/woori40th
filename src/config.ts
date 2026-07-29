@@ -136,7 +136,7 @@ export const EVENT = {
   // 날짜/시간
   dateLabel: '2026년 8월 22일 (토)',
   timeLabel: '오후 6시 30분',
-  doorsLabel: '오후 5시 30분 입장 시작',
+  doorsLabel: '오후 6시 입장 시작',
 
   // 장소
   placeLabel: '어썸그라운드',
