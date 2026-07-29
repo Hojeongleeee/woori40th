@@ -3,7 +3,6 @@ import type { FormEvent, ReactNode } from 'react'
 import { COHORT_OPTIONS, FEE, HELP_PERFORM } from '../config'
 import type { ApplyForm } from '../types'
 import { submitApplication } from '../lib/submit'
-import { bumpCount } from '../lib/sheet'
 import { useAppliedCount } from '../hooks/useAppliedCount'
 import FeeNotice, { AccountBox, CopyRow } from './FeeNotice'
 import {
@@ -82,8 +81,7 @@ export default function Apply() {
     const result = await submitApplication(form)
 
     if (result.ok) {
-      // 방금 접수된 한 건을 눈금에 바로 반영 (서버 왕복 없이)
-      if (!result.simulated) bumpCount()
+      // 마감 현황은 submitApplication 이 저장을 확인하면서 이미 갱신한다
       setStatus({ kind: 'success', simulated: result.simulated })
       return
     }

@@ -18,16 +18,18 @@ var HEADERS = ['신청시각', '이름', '핸드폰번호', '기수', '동의여
 
 // 어느 버전이 배포됐는지 브라우저로 확인하기 위한 표식.
 // 웹앱 주소를 열었을 때 이 값이 안 보이면 옛 코드가 배포된 상태입니다.
-var VERSION = 'v3-count';
+var VERSION = 'v4-check';
 
 /**
  * POST 요청 처리 — 초대장 폼에서 호출됩니다.
  */
 function doPost(e) {
   var lock = LockService.getScriptLock();
+  var locked = false;
   try {
     // 동시 제출로 인한 행 꼬임/중복 방지
     lock.waitLock(30000);
+    locked = true;
 
     var data = parseBody_(e);
     var name = String(data.name || '').trim();
@@ -61,25 +63,43 @@ function doPost(e) {
   } catch (err) {
     return json_({ result: 'error', message: String(err) });
   } finally {
-    lock.releaseLock();
+    // 잠금을 못 잡았는데 해제하면 또 예외가 나므로 잡았을 때만 푼다
+    if (locked) lock.releaseLock();
   }
 }
 
 /**
- * GET 요청 — 배포 확인 + 현재 신청 수 조회.
+ * GET 요청 — 배포 확인 + 신청 수 조회 + 접수 여부 확인.
  *
- *   ?action=count  → { result: 'ok', count: 12 }
- *   (파라미터 없음) → 위 값에 version·headers 를 덧붙인 확인용 응답
+ *   ?action=count           → { result: 'ok', count: 12 }
+ *   ?action=check&phone=... → { result: 'ok', exists: true, count: 12 }
+ *   (파라미터 없음)          → 위 값에 version·headers 를 덧붙인 확인용 응답
  *
- * 초대장 사이트의 "신청 마감 현황" 바가 이 count 를 좌석 수로 나눠 표시합니다.
- * 개인정보는 내보내지 않고 "몇 명인지"만 돌려줍니다.
+ * ※ check 가 왜 필요한가
+ *   브라우저에서 doPost 로 보낸 요청은 시트에 잘 저장되는데, Apps Script 가
+ *   응답을 넘겨주는 googleusercontent 주소를 브라우저가 다시 읽을 때 404 가
+ *   나는 경우가 있다. 그러면 저장은 됐는데 화면에는 실패로 보인다.
+ *   그래서 사이트는 제출 뒤 이 GET 으로 "정말 들어갔는지" 를 확인한다.
+ *
+ * 개인정보는 내보내지 않는다. check 는 이미 알고 있는 번호에 대해
+ * 예/아니오만 돌려주고, 명단이나 다른 사람의 정보는 절대 나가지 않는다.
  */
 function doGet(e) {
-  var action = (e && e.parameter && e.parameter.action) || '';
+  var params = (e && e.parameter) || {};
+  var action = params.action || '';
   var count = countApplications_();
 
   if (action === 'count') {
     return json_({ result: 'ok', count: count });
+  }
+
+  if (action === 'check') {
+    var digits = String(params.phone || '').replace(/[^0-9]/g, '');
+    return json_({
+      result: 'ok',
+      exists: digits ? phoneExists_(digits) : false,
+      count: count,
+    });
   }
 
   return json_({
@@ -98,6 +118,19 @@ function countApplications_() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
   if (!sheet) return 0;
   return Math.max(0, sheet.getLastRow() - 1);
+}
+
+/** 이 번호로 접수된 신청이 있는지 (숫자만 비교). */
+function phoneExists_(digits) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
+  if (!sheet || sheet.getLastRow() < 2) return false;
+
+  // 핸드폰번호 = 3번째 열
+  var values = sheet.getRange(2, 3, sheet.getLastRow() - 1, 1).getValues();
+  for (var i = 0; i < values.length; i++) {
+    if (String(values[i][0] || '').replace(/[^0-9]/g, '') === digits) return true;
+  }
+  return false;
 }
 
 function parseBody_(e) {

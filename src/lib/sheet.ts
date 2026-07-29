@@ -51,6 +51,55 @@ export function ensureCountLoaded(): void {
  * 실패하면 조용히 넘어가고 기존 값(또는 fallback)을 그대로 쓴다 —
  * 마감 현황은 참고 정보라 오류를 띄울 만큼 중요하지 않다.
  */
+/** 브라우저·프록시 캐시를 피하기 위한 일회용 값 (Date 대신 단조 증가 카운터) */
+let nonce = 0
+
+export type SheetStatus = {
+  /** 현재 신청 수. 못 읽었으면 null */
+  count: number | null
+  /** 이 번호로 접수된 신청이 있는지. 옛 배포(v3 이하)는 이 값을 안 주므로 undefined */
+  exists?: boolean
+}
+
+/**
+ * 시트 상태 조회 (GET).
+ *
+ * 제출(POST)은 시트에 잘 저장되는데도 Apps Script 가 넘겨주는
+ * googleusercontent 주소를 브라우저가 다시 읽을 때 404 가 나는 일이 있다.
+ * 그래서 "저장됐는지" 는 응답이 아니라 이 GET 으로 확인한다.
+ */
+export async function fetchStatus(phone?: string): Promise<SheetStatus> {
+  if (!endpointConfigured()) return { count: null }
+
+  const params = new URLSearchParams({ action: phone ? 'check' : 'count' })
+  if (phone) params.set('phone', phone)
+  params.set('_', String(++nonce))
+
+  try {
+    const res = await fetch(`${GOOGLE_SHEET_ENDPOINT}?${params}`, {
+      redirect: 'follow',
+      cache: 'no-store',
+    })
+    const data: unknown = await res.json().catch(() => null)
+    if (!data || typeof data !== 'object') return { count: null }
+
+    const d = data as { count?: unknown; exists?: unknown }
+    return {
+      count: typeof d.count === 'number' ? d.count : null,
+      exists: typeof d.exists === 'boolean' ? d.exists : undefined,
+    }
+  } catch {
+    return { count: null }
+  }
+}
+
+/** 확인된 신청 수를 저장소에 반영한다 (제출 확인 후 호출). */
+export function setCount(next: number): void {
+  if (next === count) return
+  count = next
+  emit()
+}
+
 export async function refreshCount(): Promise<void> {
   if (!endpointConfigured() || loading) return
   loading = true
@@ -73,14 +122,4 @@ export async function refreshCount(): Promise<void> {
   } finally {
     loading = false
   }
-}
-
-/**
- * 신청 성공 직후 서버 왕복 없이 눈금을 1 올린다.
- * (아직 한 번도 못 불러온 상태라면 건드리지 않는다)
- */
-export function bumpCount(): void {
-  if (count === null) return
-  count += 1
-  emit()
 }
