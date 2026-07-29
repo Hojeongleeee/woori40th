@@ -21,7 +21,14 @@ export default function Homecoming() {
       id="homecoming"
       className="anchor-offset relative overflow-hidden bg-ink px-6 py-24 sm:py-32"
     >
-      <Halftone colorClass="text-marigold" opacity={0.32} variant="screenUp" coarse />
+      {/* 이 섹션은 위아래로 글이 꽉 차서, 도트를 진하게 깔면 본문을 갉아먹는다.
+          농도를 낮추고 가장자리로 밀어 둔 뒤(sideLeft), 글이 앉는 가운데는
+          잉크 스크림으로 한 번 더 눌러 읽기를 방해하지 않게 한다. */}
+      <Halftone colorClass="text-marigold" opacity={0.2} variant="sideLeft" coarse />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(78%_62%_at_50%_50%,var(--color-ink)_0%,rgba(18,17,16,0.88)_46%,transparent_82%)]"
+      />
 
       <div className="relative z-10 mx-auto max-w-4xl">
         <Reveal className="text-center">
@@ -32,7 +39,7 @@ export default function Homecoming() {
             {EVENT.title}
           </h2>
           <p className="mt-3 text-lg text-cream/85">{EVENT.titleKo}</p>
-          <p className="mx-auto mt-4 max-w-xl text-sm font-light leading-relaxed text-cream/65">
+          <p className="mx-auto mt-4 max-w-xl text-sm font-light leading-relaxed text-cream/80">
             {EVENT.tagline}. 사계절 컬렉션의 하트 노트가 가장 짙게 피어나는, 40주년의 중심 무대입니다.
           </p>
           <div className="mx-auto mt-6 h-px w-14 bg-marigold" />
@@ -44,7 +51,7 @@ export default function Homecoming() {
             {info.map((r) => (
               <div
                 key={r.label}
-                className="rounded-none border border-cream/10 bg-white/[0.05] p-5 text-center backdrop-blur-sm"
+                className="rounded-none border border-cream/15 bg-ink/75 p-5 text-center backdrop-blur-sm"
               >
                 <dt className="text-xs font-medium uppercase tracking-[0.2em] text-marigold">
                   {r.label}
@@ -63,7 +70,7 @@ export default function Homecoming() {
                     </a>
                   </dd>
                 )}
-                <dd className="mt-2 text-sm text-cream/50">{r.sub}</dd>
+                <dd className="mt-2 text-sm text-cream/65">{r.sub}</dd>
               </div>
             ))}
           </dl>

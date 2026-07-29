@@ -17,9 +17,10 @@ export default function FeeNotice({
 }) {
   const compact = variant === 'compact'
 
+  // 배경 하프톤 도트가 비쳐 글을 갉아먹지 않도록 카드 바탕은 불투명하게 둔다
   return (
     <div
-      className={`border border-marigold/30 bg-marigold/[0.05] p-5 sm:p-6 ${className}`}
+      className={`border border-marigold/30 bg-soot/90 p-5 sm:p-6 backdrop-blur-sm ${className}`}
     >
       <p className="flex items-center gap-2 text-sm font-semibold text-marigold">
         <WalletIcon className="h-4 w-4 shrink-0" />
@@ -31,7 +32,7 @@ export default function FeeNotice({
         {FEE.tiers.map((t) => (
           <div
             key={t.label}
-            className="border border-cream/15 bg-ink/40 px-2 py-3 text-center"
+            className="border border-cream/15 bg-ink/70 px-2 py-3 text-center"
           >
             <dt className="text-xs text-cream/60">{t.label}</dt>
             <dd className="mt-1 font-semibold text-cream">{t.amount}</dd>
