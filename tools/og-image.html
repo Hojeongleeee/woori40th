@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>og-image (1200×630)</title>
+
+    <!-- 사이트와 같은 폰트 (Playfair Display 이탤릭 이니셜 + Pretendard 본문) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,500;1,600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+    />
+
+    <style>
+      /* ================================================================
+         카톡·메신저 링크 미리보기용 OG 이미지 (1200×630)
+         히어로 화면(src/components/Hero.tsx)을 그대로 옮긴 구성이다.
+         팔레트는 포스터와 동일 — 매리골드 앰버 / 크림 여백 / 검정 활자.
+
+         고치는 법:  이 파일을 수정하고 → node tools/render-og.mjs
+                    (public/og-image.png 가 새로 만들어진다)
+         ================================================================ */
+      :root {
+        --ink: #121110;
+        --paper: #fffdf7;
+        --cream: #f9eac8;
+        --marigold: #eeb437;
+        --sans: 'Pretendard Variable', Pretendard, -apple-system, system-ui, sans-serif;
+        --display: 'Playfair Display', Georgia, serif;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+        font-family: var(--sans);
+        color: var(--ink);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .card {
+        position: relative;
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+        background: linear-gradient(to bottom, var(--paper) 0%, var(--cream) 52%, var(--marigold) 100%);
+      }
+
+      /* 포스터의 찢긴 앰버 띠 (도트 아래에 깔린다) */
+      .band {
+        position: absolute;
+        background: rgba(238, 180, 55, 0.4);
+        filter: blur(26px);
+      }
+      .band-1 { left: -10%; top: 42%; width: 120%; height: 11%; transform: rotate(-1deg); }
+      .band-2 { right: -15%; top: 58%; width: 95%; height: 7%; transform: rotate(1.5deg); opacity: 0.7; }
+      .band-3 { left: -8%; bottom: 10%; width: 115%; height: 14%; transform: rotate(0.6deg); filter: blur(34px); }
+
+      /* 하프톤 도트 스크린 — 아래가 빽빽하고 위로 갈수록 사라진다 */
+      .dots {
+        position: absolute;
+        inset: 0;
+        color: var(--marigold);
+        background-image: radial-gradient(currentColor 1.9px, transparent 2.2px);
+        background-size: 13px 13px;
+        opacity: 0.9;
+        -webkit-mask-image: linear-gradient(
+          to top,
+          #000 0%, #000 22%, rgba(0, 0, 0, 0.62) 52%, rgba(0, 0, 0, 0.22) 76%, transparent 96%
+        );
+        mask-image: linear-gradient(
+          to top,
+          #000 0%, #000 22%, rgba(0, 0, 0, 0.62) 52%, rgba(0, 0, 0, 0.22) 76%, transparent 96%
+        );
+      }
+      .dots-coarse {
+        background-image: radial-gradient(currentColor 2.6px, transparent 3px);
+        background-size: 18px 18px;
+        opacity: 0.5;
+      }
+
+      /* 은은한 높은음자리표 실루엣 (음악 동호회 무드) */
+      .clef {
+        position: absolute;
+        right: -40px;
+        top: 50%;
+        height: 78%;
+        transform: translateY(-50%) rotate(12deg);
+        color: rgba(18, 17, 16, 0.045);
+        filter: blur(1px);
+      }
+
+      .inner {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        height: 100%;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 54px 64px 48px;
+      }
+
+      /* ── 좌상단 락업 ── */
+      .lockup { font-size: 27px; font-weight: 600; line-height: 1.5; }
+      .lockup .indent { display: block; padding-left: 40px; }
+      .lockup .ko {
+        display: block;
+        padding-left: 40px;
+        margin-top: 5px;
+        font-size: 22px;
+        font-weight: 500;
+        color: rgba(18, 17, 16, 0.7);
+      }
+
+      /* ── 타이틀 ── */
+      .title {
+        text-align: right;
+        font-weight: 800;
+        letter-spacing: -0.015em;
+        line-height: 0.86;
+        font-size: 118px;
+        margin-top: -6px;
+      }
+      .title .initial {
+        font-family: var(--display);
+        font-style: italic;
+        font-weight: 500;
+        font-size: 1.3em;
+        line-height: 0;
+        margin-right: -0.04em;
+      }
+      .title .row-2 { display: block; margin-top: 16px; }
+
+      /* ── 좌하단 ── */
+      .chapter { font-size: 25px; font-weight: 500; letter-spacing: 0.02em; }
+      .slogan {
+        margin-top: 18px;
+        font-family: var(--display);
+        font-style: italic;
+        font-weight: 500;
+        font-size: 40px;
+        color: rgba(18, 17, 16, 0.88);
+      }
+      .slogan-ko { margin-top: 8px; font-size: 21px; color: rgba(18, 17, 16, 0.72); }
+
+      .foot {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 32px;
+      }
+      .when {
+        text-align: right;
+        font-size: 25px;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        line-height: 1.45;
+        white-space: nowrap;
+      }
+      .when .where { display: block; font-size: 20px; font-weight: 500; color: rgba(18, 17, 16, 0.7); }
+    </style>
+  </head>
+
+  <body>
+    <div class="card">
+      <span class="band band-1"></span>
+      <span class="band band-2"></span>
+      <span class="band band-3"></span>
+      <span class="dots"></span>
+      <span class="dots dots-coarse"></span>
+
+      <svg
+        class="clef"
+        viewBox="0 0 200 480"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path
+          d="M82 434 C70 430 72 410 88 410 C96 410 100 416 100 424 C100 384 100 344 100 300 C100 240 100 160 100 110 C100 74 104 46 122 48 C142 50 148 78 134 100 C124 116 108 128 108 150 C108 180 150 214 150 250 C150 292 122 320 88 320 C50 320 22 290 22 250 C22 214 50 188 84 188 C112 188 132 210 132 240 C132 272 116 300 96 300"
+        />
+        <circle cx="70" cy="446" r="8" fill="currentColor" stroke="none" />
+      </svg>
+
+      <div class="inner">
+        <div class="lockup">
+          WOORI 40th
+          <span class="indent">Homecoming Party</span>
+          <span class="ko">우리동아리 40주년 창립제</span>
+        </div>
+
+        <h1 class="title">
+          <span class="initial">S</span>cent of
+          <span class="row-2"><span class="initial">M</span>emory</span>
+        </h1>
+
+        <div class="foot">
+          <div>
+            <p class="chapter">Chapter 03 Autumn</p>
+            <p class="slogan">&ldquo;Scent fades. Memory stays.&rdquo;</p>
+            <p class="slogan-ko">공연은 순간이지만, 향은 공간에 남는다.</p>
+          </div>
+          <p class="when">
+            2026.08.22 Sat
+            <span class="where">어썸그라운드 · 용산</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
