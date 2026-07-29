@@ -1,13 +1,13 @@
-import { FILLED_PERCENT } from '../config'
-
-/** 0~100 범위로 안전하게 자르기 */
-const pct = Math.max(0, Math.min(100, FILLED_PERCENT))
+import { useAppliedCount } from '../hooks/useAppliedCount'
 
 /**
  * 화면 최상단에 항상 고정되는 마감 현황 바.
- * 수치는 config.ts 의 FILLED_PERCENT 하나로 제어됩니다.
+ * 구글 시트의 실제 신청 수를 좌석 수로 나눈 값이며,
+ * 못 불러오면 config.ts 의 FILLED_PERCENT 로 대체됩니다.
  */
 export default function ProgressBar() {
+  const { percent: pct } = useAppliedCount()
+
   return (
     <div className="fixed inset-x-0 top-0 z-40">
       {/* 최상단 진행 라인 */}

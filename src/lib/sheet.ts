@@ -1,0 +1,86 @@
+import { GOOGLE_SHEET_ENDPOINT } from '../config'
+
+/* ==================================================================
+ *  구글 시트(Apps Script 웹앱) 연결 — 엔드포인트 확인 + 신청 수 조회
+ * ------------------------------------------------------------------
+ *  "신청 마감 현황" 바는 상단 고정바와 신청 섹션 두 곳에 있습니다.
+ *  각자 따로 불러오면 요청이 두 번 나가므로, 여기 모듈 하나에 값을 두고
+ *  두 컴포넌트가 같이 구독합니다. (useAppliedCount 훅 참고)
+ * ================================================================== */
+
+const PLACEHOLDER = 'PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE'
+
+export function endpointConfigured(): boolean {
+  const url = GOOGLE_SHEET_ENDPOINT?.trim()
+  return !!url && url !== PLACEHOLDER && /^https?:\/\//.test(url)
+}
+
+/* ---------------- 신청 수 저장소 (초경량 외부 스토어) ---------------- */
+
+/** 아직 못 불러왔으면 null → 화면은 config 의 FILLED_PERCENT 로 대체 표시. */
+let count: number | null = null
+let loading = false
+let started = false
+
+const listeners = new Set<() => void>()
+
+function emit() {
+  for (const listener of listeners) listener()
+}
+
+export function subscribeCount(listener: () => void): () => void {
+  listeners.add(listener)
+  return () => {
+    listeners.delete(listener)
+  }
+}
+
+export function getCountSnapshot(): number | null {
+  return count
+}
+
+/** 첫 번째 구독자가 붙을 때 한 번만 불러온다. */
+export function ensureCountLoaded(): void {
+  if (started) return
+  started = true
+  void refreshCount()
+}
+
+/**
+ * 시트의 현재 신청 수를 가져온다.
+ * 실패하면 조용히 넘어가고 기존 값(또는 fallback)을 그대로 쓴다 —
+ * 마감 현황은 참고 정보라 오류를 띄울 만큼 중요하지 않다.
+ */
+export async function refreshCount(): Promise<void> {
+  if (!endpointConfigured() || loading) return
+  loading = true
+  try {
+    const res = await fetch(`${GOOGLE_SHEET_ENDPOINT}?action=count`, {
+      redirect: 'follow',
+    })
+    const data: unknown = await res.json().catch(() => null)
+    const next =
+      data && typeof (data as { count?: unknown }).count === 'number'
+        ? (data as { count: number }).count
+        : null
+
+    if (next !== null && next !== count) {
+      count = next
+      emit()
+    }
+  } catch {
+    // 네트워크·CORS 문제 → fallback 유지
+  } finally {
+    loading = false
+  }
+}
+
+/**
+ * 신청 성공 직후 서버 왕복 없이 눈금을 1 올린다.
+ * (아직 한 번도 못 불러온 상태라면 건드리지 않는다)
+ */
+export function bumpCount(): void {
+  if (count === null) return
+  count += 1
+  emit()
+}

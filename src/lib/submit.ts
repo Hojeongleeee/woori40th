@@ -3,14 +3,8 @@ import {
   SIMULATE_SUBMIT_WHEN_NO_ENDPOINT,
 } from '../config'
 import type { ApplyForm, SubmitResult } from '../types'
+import { endpointConfigured } from './sheet'
 import { onlyDigits } from './validation'
-
-const PLACEHOLDER = 'PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE'
-
-function endpointConfigured(): boolean {
-  const url = GOOGLE_SHEET_ENDPOINT?.trim()
-  return !!url && url !== PLACEHOLDER && /^https?:\/\//.test(url)
-}
 
 /**
  * 신청 데이터를 구글 시트(Apps Script 웹앱)로 전송합니다.

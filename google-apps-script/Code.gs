@@ -18,7 +18,7 @@ var HEADERS = ['신청시각', '이름', '핸드폰번호', '기수', '동의여
 
 // 어느 버전이 배포됐는지 브라우저로 확인하기 위한 표식.
 // 웹앱 주소를 열었을 때 이 값이 안 보이면 옛 코드가 배포된 상태입니다.
-var VERSION = 'v2-helpPerform';
+var VERSION = 'v3-count';
 
 /**
  * POST 요청 처리 — 초대장 폼에서 호출됩니다.
@@ -66,19 +66,39 @@ function doPost(e) {
 }
 
 /**
- * GET 요청 — 배포가 잘 됐는지 브라우저로 확인용.
- * version 과 headers 가 보이면 최신 코드가 배포된 것입니다.
+ * GET 요청 — 배포 확인 + 현재 신청 수 조회.
+ *
+ *   ?action=count  → { result: 'ok', count: 12 }
+ *   (파라미터 없음) → 위 값에 version·headers 를 덧붙인 확인용 응답
+ *
+ * 초대장 사이트의 "신청 마감 현황" 바가 이 count 를 좌석 수로 나눠 표시합니다.
+ * 개인정보는 내보내지 않고 "몇 명인지"만 돌려줍니다.
  */
-function doGet() {
+function doGet(e) {
+  var action = (e && e.parameter && e.parameter.action) || '';
+  var count = countApplications_();
+
+  if (action === 'count') {
+    return json_({ result: 'ok', count: count });
+  }
+
   return json_({
     result: 'ok',
     message: 'Woori 40th endpoint alive',
     version: VERSION,
+    count: count,
     headers: HEADERS,
   });
 }
 
 /* ------------------------- 내부 유틸 ------------------------- */
+
+/** 헤더 한 줄을 뺀 신청 건수. 시트가 아직 없으면 0. */
+function countApplications_() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
+  if (!sheet) return 0;
+  return Math.max(0, sheet.getLastRow() - 1);
+}
 
 function parseBody_(e) {
   if (!e || !e.postData || !e.postData.contents) return {};

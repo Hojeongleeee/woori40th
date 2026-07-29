@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import type { FormEvent, ReactNode } from 'react'
-import { COHORT_OPTIONS, FILLED_PERCENT, HELP_PERFORM } from '../config'
+import { COHORT_OPTIONS, HELP_PERFORM } from '../config'
 import type { ApplyForm } from '../types'
 import { submitApplication } from '../lib/submit'
+import { bumpCount } from '../lib/sheet'
+import { useAppliedCount } from '../hooks/useAppliedCount'
 import FeeNotice from './FeeNotice'
 import {
   formatPhone,
@@ -12,8 +14,6 @@ import {
 } from '../lib/validation'
 import Reveal from './Reveal'
 import Halftone from './Halftone'
-
-const pct = Math.max(0, Math.min(100, FILLED_PERCENT))
 
 type FieldErrors = Partial<Record<keyof ApplyForm, string>>
 type Status =
@@ -52,6 +52,7 @@ export default function Apply() {
   const [form, setForm] = useState<ApplyForm>(EMPTY)
   const [errors, setErrors] = useState<FieldErrors>({})
   const [status, setStatus] = useState<Status>({ kind: 'idle' })
+  const { count, seats, percent: pct, live } = useAppliedCount()
 
   const useSelect = COHORT_OPTIONS.length > 0
 
@@ -81,6 +82,8 @@ export default function Apply() {
     const result = await submitApplication(form)
 
     if (result.ok) {
+      // 방금 접수된 한 건을 눈금에 바로 반영 (서버 왕복 없이)
+      if (!result.simulated) bumpCount()
       setStatus({ kind: 'success', simulated: result.simulated })
       return
     }
@@ -126,7 +129,14 @@ export default function Apply() {
         <Reveal delay={100} className="mt-8">
           <div className="rounded-none border border-cream/15 bg-soot p-5">
             <div className="flex items-end justify-between">
-              <span className="text-sm text-cream/70">신청 마감 현황</span>
+              <span className="text-sm text-cream/70">
+                신청 마감 현황
+                {live && (
+                  <span className="ml-2 text-cream/45">
+                    {seats}석 중 {count}명
+                  </span>
+                )}
+              </span>
               <span className="font-en text-2xl font-semibold text-marigold">{pct}%</span>
             </div>
             <div className="mt-3 h-2.5 w-full overflow-hidden rounded-full bg-white/10">
