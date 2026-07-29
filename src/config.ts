@@ -18,9 +18,9 @@
  *      (google-apps-script/Code.gs 를 "새 버전"으로 다시 배포하면 해결)
  *    · 네트워크 오류
  *
- *  2026-07-29 기준 실제 신청 40명 / 90석 = 44% 라 그 값을 넣어 둡니다.
+ *  2026-07-29 기준 실제 신청 41명 / 90석 = 46% 라 그 값을 넣어 둡니다.
  * ------------------------------------------------------------------ */
-export const FILLED_PERCENT = 44
+export const FILLED_PERCENT = 46
 
 /* ------------------------------------------------------------------
  *  2) 구글 시트 저장용 엔드포인트 URL
@@ -31,7 +31,7 @@ export const FILLED_PERCENT = 44
  *   (주소를 유지하려면 "배포 관리 → 편집 → 버전: 새 버전" 으로 배포)
  *   주소를 브라우저로 열었을 때 version 이 보이면 최신 코드입니다. */
 export const GOOGLE_SHEET_ENDPOINT =
-  'https://script.google.com/macros/s/AKfycbz2sxKMzmGTZjzLMAYHByLXIpZWiQiv4LabqJdKGLlXL32BLT1TbtZY-WjImBVRcBEB/exec'
+  'https://script.google.com/macros/s/AKfycbyZmvlsuJir9TcweY0_Qeip3eCrK7KCXoMfxPOKynXvVNQYl5E7on4Om6H_6n6rWDix/exec'
 
 /* 엔드포인트 미설정 시 제출을 "성공한 것처럼" 시뮬레이션할지 여부. */
 export const SIMULATE_SUBMIT_WHEN_NO_ENDPOINT = true
