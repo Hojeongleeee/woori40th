@@ -156,6 +156,33 @@ export function DiceIcon(props: IconProps) {
   )
 }
 
+export function CopyIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <rect x="9" y="9" width="11" height="11" rx="2" />
+      <path d="M15 5.5A1.5 1.5 0 0 0 13.5 4h-8A1.5 1.5 0 0 0 4 5.5v8A1.5 1.5 0 0 0 5.5 15" />
+    </svg>
+  )
+}
+
+export function CheckIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M4.5 12.5l5 5 10-11" />
+    </svg>
+  )
+}
+
+export function WalletIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M3.5 8.5A2 2 0 0 1 5.5 6.5h12A1.5 1.5 0 0 1 19 8v1" />
+      <rect x="3.5" y="8.5" width="17" height="11" rx="2" />
+      <circle cx="16" cy="14" r="1.3" fill="currentColor" stroke="none" />
+    </svg>
+  )
+}
+
 /** config 의 icon 키 → 컴포넌트 매핑 */
 export const CORNER_ICONS: Record<string, (p: IconProps) => ReactElement> = {
   camera: CameraIcon,

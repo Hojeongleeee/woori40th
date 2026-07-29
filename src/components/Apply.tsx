@@ -3,6 +3,7 @@ import type { FormEvent, ReactNode } from 'react'
 import { COHORT_OPTIONS, FILLED_PERCENT, HELP_PERFORM } from '../config'
 import type { ApplyForm } from '../types'
 import { submitApplication } from '../lib/submit'
+import FeeNotice from './FeeNotice'
 import {
   formatPhone,
   isValidCohort,
@@ -116,6 +117,9 @@ export default function Apply() {
             <br />
             자리가 채워지는 대로 마감되니 서둘러 주세요.
           </p>
+          <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-cream/55 break-keep">
+            사전 연락으로 참석 여부를 회신해 주신 분들도 다시 한 번 신청해 주시면 감사하겠습니다.
+          </p>
         </Reveal>
 
         {/* 마감 현황 바 (항상 보이도록 상단바에도 있지만, 여기서 크게 한 번 더) */}
@@ -132,6 +136,11 @@ export default function Apply() {
               />
             </div>
           </div>
+        </Reveal>
+
+        {/* 회비 · 입금 계좌 (신청과 입금이 바로 이어지도록 폼 위에) */}
+        <Reveal delay={130} className="mt-5">
+          <FeeNotice variant="compact" />
         </Reveal>
 
         {/* 폼 / 완료 화면 */}
@@ -348,8 +357,6 @@ function SuccessCard({ name, simulated }: { name: string; simulated?: boolean })
       <h3 className="mt-5 text-2xl text-cream">신청이 완료되었어요!</h3>
       <p className="mt-3 text-sm leading-relaxed text-cream/75">
         <b className="text-marigold">{name}</b>님, 40주년 창립제에서 만나요.
-        <br />
-        자세한 장소와 안내는 신청해 주신 번호로 따로 연락드릴게요.
       </p>
       {simulated && (
         <p className="mt-5 rounded-none border border-marigold/30 bg-marigold/10 px-3 py-2 text-sm text-marigold/90">

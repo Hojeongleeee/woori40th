@@ -38,6 +38,9 @@ export default function Hero() {
         <p className="font-en text-sm font-semibold leading-relaxed text-ink sm:text-base">
           WOORI {PROJECT.anniversary}th
           <span className="mt-1 block pl-6 sm:pl-10">Homecoming Party</span>
+          <span className="mt-1.5 block pl-6 text-xs font-medium text-ink/70 sm:pl-10 sm:text-sm">
+            우리동아리 {PROJECT.anniversary}주년 창립제
+          </span>
         </p>
 
         {/* 포스터 타이틀 — 디도네 이탤릭 이니셜 + 굵은 산세리프 */}

@@ -1,5 +1,6 @@
 import { EVENT, NAVER_MAP_URL } from '../config'
 import { MapPinIcon } from './Icons'
+import FeeNotice from './FeeNotice'
 import Reveal from './Reveal'
 import Halftone from './Halftone'
 
@@ -68,11 +69,18 @@ export default function Homecoming() {
           </dl>
         </Reveal>
 
+        {/* 회비 · 입금 계좌 */}
+        <Reveal delay={100} className="mt-6">
+          <FeeNotice variant="full" />
+        </Reveal>
+
         {/* 좌석 한정 안내 + 참가 신청 (상단 배치) */}
         <Reveal delay={100} className="mt-10 text-center">
           <p className="mx-auto max-w-lg text-sm leading-relaxed text-cream/75 break-keep">
-            <span className="font-semibold text-marigold">장소 여건상 좌석이 한정</span>되어 있어,
-            사전 신청하신 분에 한해 입장하실 수 있어요. 자리가 마감되기 전에 먼저 신청해 주세요.
+            <span className="font-semibold text-marigold">
+              장소 여건상 좌석이 {EVENT.seats}석으로 한정
+            </span>
+            되어 있어요. 자리가 마감되기 전에 서둘러 신청해 주세요.
           </p>
           <a
             href="#apply"

@@ -19,7 +19,7 @@ export default function Timeline() {
             Program
           </p>
           <h2 className="text-3xl text-cream sm:text-4xl">오늘의 흐름</h2>
-          <p className="mt-4 text-sm text-cream/60">층층이 쌓인 향수와 같은 두 시간</p>
+          <p className="mt-4 text-sm text-cream/60">층층이 쌓인 향수처럼, 하나씩 이어지는 순간들</p>
           <div className="mx-auto mt-6 h-px w-14 bg-marigold" />
         </Reveal>
 
@@ -36,12 +36,7 @@ export default function Timeline() {
                 <span className="h-2.5 w-2.5 rounded-full bg-marigold" />
               </span>
 
-              <div className="flex flex-wrap items-baseline gap-3">
-                <span className="bg-marigold px-3 py-0.5 font-en text-xs font-bold text-ink">
-                  {item.time}
-                </span>
-                <h3 className="text-xl text-cream sm:text-2xl">{item.title}</h3>
-              </div>
+              <h3 className="text-xl text-cream sm:text-2xl">{item.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-cream/65">{item.desc}</p>
             </Reveal>
           ))}
