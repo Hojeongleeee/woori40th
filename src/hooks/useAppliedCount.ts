@@ -1,14 +1,14 @@
 import { useEffect, useSyncExternalStore } from 'react'
-import { EVENT, FILLED_PERCENT } from '../config'
+import { EVENT, FILLED_PERCENT, MAX_FILLED_PERCENT } from '../config'
 import {
   ensureCountLoaded,
   getCountSnapshot,
   subscribeCount,
 } from '../lib/sheet'
 
-/** 0~100 범위로 안전하게 자르기 */
+/** 0 ~ MAX_FILLED_PERCENT 범위로 자르기 (상한을 두는 이유는 config 쪽 주석 참고) */
 function clamp(n: number): number {
-  return Math.max(0, Math.min(100, n))
+  return Math.max(0, Math.min(MAX_FILLED_PERCENT, n))
 }
 
 /**
