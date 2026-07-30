@@ -183,7 +183,6 @@ export const CONTACTS = [
  * ------------------------------------------------------------------ */
 export const CREDITS = {
   summary: '함께 준비한 분들',
-  note: '위 문의 연락처의 위원장·간사·활동기수 대표도 함께 준비했습니다.',
   people: [
     { cohort: '3기', names: ['김길용'] },
     { cohort: '7기', names: ['정경'] },

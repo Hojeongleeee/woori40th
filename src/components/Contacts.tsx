@@ -1,6 +1,6 @@
-import type { ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { CONTACTS, CREDITS, EVENT } from '../config'
-import { MessageIcon, PhoneIcon } from './Icons'
+import { CheckIcon, CopyIcon, MessageIcon, PhoneIcon } from './Icons'
 
 /**
  * 푸터의 문의 연락처 + 함께 준비한 분들.
@@ -56,14 +56,13 @@ export default function Contacts() {
               </li>
             ))}
           </ul>
-          <p className="mt-4 text-xs leading-relaxed text-cream/40 break-keep">{CREDITS.note}</p>
         </div>
       </details>
     </div>
   )
 }
 
-/** 기수 · 이름(· 직책) + 번호, 그리고 전화 / 문자 버튼. */
+/** 기수 · 이름(· 직책) + 복사 / 전화 / 문자 버튼. */
 function PersonRow({
   cohort,
   name,
@@ -80,21 +79,29 @@ function PersonRow({
   const digits = phone.replace(/-/g, '')
   const who = `${cohort} ${name}${title ? ` ${title}` : ''}`
 
+  const [revealed, setRevealed] = useState(false)
+
+  /* 버튼 세 개가 한 줄에 다 안 들어가면 아래로 내려가게 flex-wrap 을 뒀다.
+     이름칸을 눌러 "40기 정지윤 / 부회장" 처럼 쪼개는 것보다 낫다. */
   return (
-    <div className="flex items-center justify-between gap-3">
+    <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
       <div className="min-w-0">
         <p className="flex items-baseline gap-1.5 text-sm">
           <span className="shrink-0 text-cream/45">{cohort}</span>
           <span className="font-medium text-cream">{name}</span>
           {title && <span className="text-xs text-marigold/80">{title}</span>}
         </p>
-        {/* select-all — 눌러서 한 번에 집히니 번호를 손으로 옮겨 적지 않아도 된다 */}
-        <p className="mt-0.5 select-all text-xs tabular-nums tracking-wide text-cream/50">
-          {phone}
-        </p>
+        {/* 클립보드가 막힌 환경(비 HTTPS·구형 브라우저)에서만 번호를 드러낸다.
+           번호를 숨긴 채 복사도 실패하면 연락할 방법이 아예 없어진다. */}
+        {revealed && (
+          <p className="mt-0.5 select-all text-xs tabular-nums tracking-wide text-cream/55">
+            {phone}
+          </p>
+        )}
       </div>
 
       <div className="flex shrink-0 gap-1.5">
+        <CopyButton phone={phone} who={who} onFail={() => setRevealed(true)} />
         <ActionButton href={`tel:${digits}`} label={`${who}에게 전화 걸기`} text="전화">
           <PhoneIcon className="h-3.5 w-3.5" strokeWidth={1.6} />
         </ActionButton>
@@ -103,6 +110,54 @@ function PersonRow({
         </ActionButton>
       </div>
     </div>
+  )
+}
+
+/**
+ * 번호 복사 — 아이콘만. 옆의 '전화·문자' 와 나란히 서므로 글자까지 넣으면
+ * 좁은 화면에서 버튼 줄이 통째로 아래로 밀린다. 대신 눌렀을 때만 '복사됐어요'
+ * 로 넓어져 결과를 알린다. (FeeNotice 의 CopyRow 와 같은 동작)
+ *
+ * 아이콘만 있는 버튼이라 이름이 aria-label 에서 나온다. 눌린 결과도 라벨을
+ * 바꿔서 알린다 — 라벨을 고정해 두면 aria-live 가 읽어 줄 변화가 없다.
+ */
+function CopyButton({ phone, who, onFail }: { phone: string; who: string; onFail: () => void }) {
+  const [copied, setCopied] = useState(false)
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => () => {
+    if (timer.current) clearTimeout(timer.current)
+  }, [])
+
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(phone)
+    } catch {
+      onFail() // 복사가 막히면 번호를 화면에 띄워 직접 가져가게 한다
+      return
+    }
+    setCopied(true)
+    if (timer.current) clearTimeout(timer.current)
+    timer.current = setTimeout(() => setCopied(false), 2000)
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={copy}
+      aria-label={copied ? `${who} 전화번호가 복사됐어요` : `${who} 전화번호 복사하기`}
+      aria-live="polite"
+      className="inline-flex min-h-[38px] items-center gap-1.5 border border-cream/15 px-2.5 text-xs text-cream/80 transition-colors hover:border-marigold/60 hover:bg-marigold/10 hover:text-cream focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marigold"
+    >
+      {copied ? (
+        <>
+          <CheckIcon className="h-3.5 w-3.5 text-marigold" />
+          <span className="text-marigold">복사됐어요</span>
+        </>
+      ) : (
+        <CopyIcon className="h-3.5 w-3.5" />
+      )}
+    </button>
   )
 }
 
