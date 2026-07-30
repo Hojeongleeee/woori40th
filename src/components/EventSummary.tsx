@@ -2,6 +2,7 @@ import { EVENT, PROJECT } from '../config'
 import Reveal from './Reveal'
 import Halftone from './Halftone'
 import VenueMap from './VenueMap'
+import Contacts from './Contacts'
 
 /**
  * 마지막 — 행사 정보 요약 + 문의. 가장 깊은 베이스의 잔향.
@@ -12,7 +13,6 @@ export default function EventSummary() {
   const rows = [
     { label: '일시', value: `${EVENT.dateLabel} ${EVENT.timeLabel}`, subs: [EVENT.doorsLabel] },
     { label: '장소', value: EVENT.placeLabel, subs: [EVENT.placeNote, EVENT.placeAccess] },
-    { label: '문의', value: EVENT.contactLabel, subs: [EVENT.contactValue] },
   ]
 
   return (
@@ -64,7 +64,12 @@ export default function EventSummary() {
           <VenueMap className="mx-auto mt-10 max-w-md" />
         </Reveal>
 
+        {/* 문의 연락처 + 함께 준비한 분들 */}
         <Reveal delay={200}>
+          <Contacts />
+        </Reveal>
+
+        <Reveal delay={240}>
           <a
             href="#apply"
             className="mt-10 inline-flex items-center gap-2 rounded-full bg-marigold px-8 py-3.5 text-sm font-semibold text-ink transition-transform hover:scale-[1.03] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream"
