@@ -7,10 +7,12 @@ import VenueMap from './VenueMap'
  * 마지막 — 행사 정보 요약 + 문의. 가장 깊은 베이스의 잔향.
  */
 export default function EventSummary() {
+  /* subs 는 한 줄씩 따로 — 주소와 길 안내를 이어 붙이면 좁은 화면에서
+     "1호선 남영 / 역 1번 출구에서" 처럼 역 이름이 쪼개진다. */
   const rows = [
-    { label: '일시', value: `${EVENT.dateLabel} ${EVENT.timeLabel}`, sub: EVENT.doorsLabel },
-    { label: '장소', value: EVENT.placeLabel, sub: EVENT.placeNote },
-    { label: '문의', value: EVENT.contactLabel, sub: EVENT.contactValue },
+    { label: '일시', value: `${EVENT.dateLabel} ${EVENT.timeLabel}`, subs: [EVENT.doorsLabel] },
+    { label: '장소', value: EVENT.placeLabel, subs: [EVENT.placeNote, EVENT.placeAccess] },
+    { label: '문의', value: EVENT.contactLabel, subs: [EVENT.contactValue] },
   ]
 
   return (
@@ -46,7 +48,11 @@ export default function EventSummary() {
                 </dt>
                 <dd className="text-cream/90">
                   <span className="block">{r.value}</span>
-                  {r.sub && <span className="text-sm text-cream/50">{r.sub}</span>}
+                  {r.subs.map((s) => (
+                    <span key={s} className="block text-sm text-cream/50">
+                      {s}
+                    </span>
+                  ))}
                 </dd>
               </div>
             ))}

@@ -10,10 +10,12 @@ import Halftone from './Halftone'
  * 가을·우디 톤의 깊은 잔향 위에서.
  */
 export default function Homecoming() {
+  /* subs 는 한 줄씩 따로 렌더한다. 시각·주소를 한 문자열로 이어 붙이면
+     좁은 화면에서 "…입장 시" / "작)" 처럼 엉뚱한 데서 끊긴다. */
   const info = [
-    { label: '일시', value: EVENT.dateLabel, sub: `${EVENT.timeLabel} (${EVENT.doorsLabel})` },
-    { label: '장소', value: EVENT.placeLabel, sub: EVENT.placeNote, map: true },
-    { label: '대상', value: '선배 · 활동 기수 누구나', sub: '동아리와의 추억 하나면 충분해요' },
+    { label: '일시', value: EVENT.dateLabel, subs: [EVENT.timeLabel, `(${EVENT.doorsLabel})`] },
+    { label: '장소', value: EVENT.placeLabel, subs: [EVENT.placeNote, EVENT.placeAccess], map: true },
+    { label: '대상', value: '선배 · 활동 기수 누구나', subs: ['동아리와의 추억 하나면 충분해요'] },
   ]
 
   return (
@@ -70,7 +72,11 @@ export default function Homecoming() {
                     </a>
                   </dd>
                 )}
-                <dd className="mt-2 text-sm text-cream/65">{r.sub}</dd>
+                {r.subs.map((s) => (
+                  <dd key={s} className="mt-1.5 text-sm text-cream/65">
+                    {s}
+                  </dd>
+                ))}
               </div>
             ))}
           </dl>
