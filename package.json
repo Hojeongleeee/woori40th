@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "thumbs": "node tools/thumbs.mjs",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit"
   },

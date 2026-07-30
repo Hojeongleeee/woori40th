@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { VENUE } from '../config'
 import { CameraIcon } from './Icons'
 import Reveal from './Reveal'
@@ -69,33 +69,63 @@ function Slideshow({
   const [restart, setRestart] = useState(0)
   const reduced = usePrefersReducedMotion()
 
-  const rolling = images.length > 1 && !reduced
+  const [boxRef, inView] = useSeenOnce<HTMLDivElement>()
+
+  // 화면 밖에서는 회전도, 다음 장 받기도 하지 않는다 — 스크롤해 내려오기 전에
+  // 타이머가 먼저 돌아버리면 안 보이는 사진까지 미리 받게 된다.
+  const rolling = images.length > 1 && !reduced && inView
+  const rotateMs = ROTATE_MS + index * 400
+
+  /**
+   * 지금 DOM 에 올려 둔 사진들. 처음에는 첫 장만 올린다.
+   *
+   * 한 구역의 사진을 전부 겹쳐 두면 opacity-0 이라도 브라우저는 "화면 안"으로 보고
+   * loading="lazy" 를 무시한 채 전부 받아버린다 (네 구역 합쳐 11장 2.5MB).
+   * 그래서 넘어갈 차례가 가까워졌을 때 다음 장을 붙인다.
+   */
+  const [mounted, setMounted] = useState<number[]>([0])
 
   useEffect(() => {
     if (!rolling) return
-    const id = setInterval(
-      () => setActive((cur) => (cur + 1) % images.length),
-      ROTATE_MS + index * 400,
-    )
+    const id = setInterval(() => setActive((cur) => (cur + 1) % images.length), rotateMs)
     return () => clearInterval(id)
-  }, [rolling, images.length, index, restart])
+  }, [rolling, images.length, rotateMs, restart])
+
+  useEffect(() => {
+    const add = (i: number) => setMounted((m) => (m.includes(i) ? m : [...m, i]))
+
+    // 점을 눌러 건너뛴 장은 즉시 올려야 화면이 비지 않는다
+    add(active)
+    if (!rolling) return
+
+    // 다음 장은 넘어가기 한 박자 전에 미리 — 크로스페이드가 빈 화면에서 시작하지 않게
+    const next = (active + 1) % images.length
+    const id = setTimeout(() => add(next), Math.max(0, rotateMs - 1200))
+    return () => clearTimeout(id)
+  }, [active, rolling, images.length, rotateMs])
 
   if (images.length === 0) return <Placeholder />
 
   return (
-    <div className="relative aspect-[4/3] overflow-hidden border border-ink/20 bg-cream/70 shadow-[0_18px_44px_-30px_rgba(18,17,16,0.5)]">
-      {images.map((src, i) => (
-        <img
-          key={src}
-          src={src}
-          alt={i === active ? label : ''}
-          aria-hidden={i !== active}
-          loading="lazy"
-          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-[1200ms] ease-in-out ${
-            i === active ? 'opacity-100' : 'opacity-0'
-          }`}
-        />
-      ))}
+    <div
+      ref={boxRef}
+      className="relative aspect-[4/3] overflow-hidden border border-ink/20 bg-cream/70 shadow-[0_18px_44px_-30px_rgba(18,17,16,0.5)]"
+    >
+      {images.map((src, i) =>
+        mounted.includes(i) ? (
+          <img
+            key={src}
+            src={src}
+            alt={i === active ? label : ''}
+            aria-hidden={i !== active}
+            loading="lazy"
+            decoding="async"
+            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-[1200ms] ease-in-out ${
+              i === active ? 'opacity-100' : 'opacity-0'
+            }`}
+          />
+        ) : null,
+      )}
 
       {images.length > 1 && (
         <div className="absolute bottom-2.5 right-2.5 flex gap-1.5">
@@ -130,6 +160,37 @@ function Placeholder() {
       <span className="relative text-xs font-medium text-graphite">장소 사진 준비 중</span>
     </div>
   )
+}
+
+/**
+ * 요소가 화면에 한 번이라도 들어왔는지. 한 번 들어오면 계속 true.
+ * (useReveal 과 달리 클래스가 아니라 값이 필요해서 따로 둔다)
+ */
+function useSeenOnce<T extends HTMLElement>() {
+  const ref = useRef<T>(null)
+  const [seen, setSeen] = useState(false)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el || seen) return
+
+    if (typeof IntersectionObserver === 'undefined') {
+      setSeen(true)
+      return
+    }
+
+    // 살짝 앞당겨 관찰해 스크롤이 닿는 순간에는 첫 장이 이미 준비돼 있게 한다
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) setSeen(true)
+      },
+      { rootMargin: '250px' },
+    )
+    io.observe(el)
+    return () => io.disconnect()
+  }, [seen])
+
+  return [ref, seen] as const
 }
 
 /** 모션 최소화를 켠 사용자에게는 자동 전환 대신 첫 장만 보여준다. */

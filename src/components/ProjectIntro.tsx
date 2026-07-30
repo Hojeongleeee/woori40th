@@ -24,7 +24,7 @@ export default function ProjectIntro() {
         </Reveal>
 
         <Reveal delay={120}>
-          <div className="mt-10 space-y-6 text-left text-lg font-light leading-loose text-graphite/90 sm:text-xl">
+          <div className="mt-10 space-y-6 text-lg font-light leading-loose text-graphite/90 sm:text-xl">
             {INTENT.body.map((p, i) => (
               <p key={i} className={i === INTENT.body.length - 1 ? 'text-graphite' : undefined}>
                 {p}

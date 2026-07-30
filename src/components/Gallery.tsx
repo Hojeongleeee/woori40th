@@ -16,10 +16,37 @@ import Halftone from './Halftone'
 /** 한 페이지에 보여줄 사진 수 (3×3) */
 const PAGE_SIZE = 9
 
+/**
+ * 그리드 한 칸의 실제 표시 너비.
+ * 섹션이 px-6(좌우 24px) 안의 max-w-5xl(1024px)이고 3열 gap 은 12px(sm 부터 16px).
+ * 브라우저가 이 값 × 화면 배율에 맞는 썸네일을 골라 받는다.
+ */
+const SIZES =
+  '(min-width: 1120px) 331px, (min-width: 640px) calc((100vw - 80px) / 3), calc((100vw - 72px) / 3)'
+
+/**
+ * '/gallery/01.jpg' → '/gallery/thumb/01-330.webp'
+ * tools/thumbs.mjs 가 굽는 파일명 규칙. 너비를 바꾸려면 그쪽 WIDTHS 도 함께 고칠 것.
+ */
+function thumb(src: string, width: number) {
+  return src.replace(/\/([^/]+)\.jpe?g$/i, `/thumb/$1-${width}.webp`)
+}
+
+/**
+ * 원본을 미리 받아 둔다. 브라우저 캐시에 올려두는 게 목적이라 결과는 버린다.
+ * 이미 받은 사진이면 캐시에서 끝나므로 여러 번 불러도 괜찮다.
+ */
+function preload(src: string) {
+  const img = new Image()
+  img.src = src
+}
+
 export default function Gallery() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   const [page, setPage] = useState(0)
+  /** 라이트박스에 띄운 원본이 도착했는지 */
+  const [full, setFull] = useState(false)
 
   const pages: (typeof GALLERY_IMAGES)[] = []
   for (let i = 0; i < GALLERY_IMAGES.length; i += PAGE_SIZE) {
@@ -57,6 +84,24 @@ export default function Gallery() {
       }),
     [],
   )
+
+  /**
+   * 라이트박스가 열리면 앞뒤 사진의 원본을 미리 받아 ← → 가 곧바로 반응하게 한다.
+   * 지금 보고 있는 사진이 먼저 도착해야 하므로 한 박자(400ms) 늦게 시작한다.
+   */
+  // 다른 사진으로 넘어가면 다시 기다리는 상태로
+  useEffect(() => {
+    setFull(false)
+  }, [openIndex])
+
+  useEffect(() => {
+    if (openIndex === null || GALLERY_IMAGES.length < 2) return
+    const n = GALLERY_IMAGES.length
+    const id = setTimeout(() => {
+      for (const d of [1, -1]) preload(GALLERY_IMAGES[(openIndex + d + n) % n].src)
+    }, 400)
+    return () => clearTimeout(id)
+  }, [openIndex])
 
   const goTo = useCallback((p: number, smooth = true) => {
     const el = trackRef.current
@@ -135,14 +180,31 @@ export default function Gallery() {
                       key={img.src}
                       type="button"
                       onClick={() => setOpenIndex(i)}
+                      // 누르기 전에 원본을 받기 시작해 라이트박스가 덜 기다리게 한다.
+                      // (마우스는 hover, 터치는 손을 떼기 전, 키보드는 포커스 시점)
+                      onPointerEnter={() => preload(img.src)}
+                      onPointerDown={() => preload(img.src)}
+                      onFocus={() => preload(img.src)}
                       className="group relative block aspect-square w-full overflow-hidden border border-ink/15 bg-paper focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
                     >
-                      <img
-                        src={img.src}
-                        alt={img.caption ?? `Woori 추억 사진 ${i + 1}`}
-                        loading="lazy"
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
+                      {/*
+                        WebP 썸네일을 받고, WebP 를 못 읽는 구형 브라우저만 원본 jpg 로 내려간다.
+                        (source 의 type 을 지원하지 않으면 브라우저가 img 로 넘어간다)
+                      */}
+                      <picture>
+                        <source
+                          type="image/webp"
+                          srcSet={`${thumb(img.src, 330)} 330w, ${thumb(img.src, 660)} 660w`}
+                          sizes={SIZES}
+                        />
+                        <img
+                          src={img.src}
+                          alt={img.caption ?? `Woori 추억 사진 ${i + 1}`}
+                          loading="lazy"
+                          decoding="async"
+                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      </picture>
                       {img.caption && (
                         <span className="absolute inset-x-0 bottom-0 translate-y-2 bg-gradient-to-t from-ink/90 to-transparent px-3 pb-2 pt-8 text-left text-sm text-cream/90 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
                           {img.caption}
@@ -214,11 +276,26 @@ export default function Gallery() {
             </>
           )}
 
+          {/* 원본이 아직 안 왔을 때 — 빈 화면 대신 (미리 받아 둔 사진이면 뜨지 않는다) */}
+          {!full && (
+            <span className="pointer-events-none absolute inset-0 grid place-items-center" aria-hidden>
+              <span className="h-8 w-8 animate-spin rounded-full border-2 border-cream/25 border-t-cream/80" />
+            </span>
+          )}
+
           <figure className="max-h-[85vh] max-w-3xl" onClick={(e) => e.stopPropagation()}>
             <img
+              key={GALLERY_IMAGES[openIndex].src}
               src={GALLERY_IMAGES[openIndex].src}
               alt={GALLERY_IMAGES[openIndex].caption ?? '추억 사진'}
-              className="max-h-[78vh] w-auto rounded-none object-contain shadow-2xl"
+              onLoad={() => setFull(true)}
+              // 캐시에 이미 있으면 onLoad 가 안 붙을 수 있어 complete 로 한 번 더 본다
+              ref={(el) => {
+                if (el?.complete) setFull(true)
+              }}
+              className={`max-h-[78vh] w-auto rounded-none object-contain shadow-2xl transition-opacity duration-300 ${
+                full ? 'opacity-100' : 'opacity-0'
+              }`}
             />
             <figcaption className="mt-3 text-center text-sm text-cream/80">
               {GALLERY_IMAGES[openIndex].caption ?? (

@@ -40,6 +40,8 @@ npm run typecheck
 
 1. 이미지 파일을 `public/gallery/` 폴더에 넣습니다. (폴더는 새로 만들어도 됨)
 2. `src/config.ts` 의 `GALLERY_IMAGES` 배열에 한 줄씩 추가합니다.
+3. **`npm run thumbs` 를 돌립니다.** 그리드용 WebP 썸네일이 `public/gallery/thumb/` 에 생기고,
+   이걸 사진과 **함께 커밋**해야 합니다. (안 돌리면 그리드가 원본 1600px 을 그대로 받아 느려집니다)
 
 ```ts
 export const GALLERY_IMAGES: GalleryImage[] = [
@@ -50,7 +52,22 @@ export const GALLERY_IMAGES: GalleryImage[] = [
 
 - 배열이 비어 있으면 **"추억을 기다리는 중" placeholder** 가 표시됩니다.
 - 사진을 넣으면 자동으로 그리드가 채워지고, 클릭하면 **크게 보기(라이트박스)** 가 동작합니다.
-- 외부 URL(`https://...`)도 그대로 넣을 수 있습니다.
+- 외부 URL(`https://...`)도 그대로 넣을 수 있습니다. (썸네일은 안 만들어지니 원본이 그대로 나갑니다)
+
+> **⚠️ 사진을 교체할 때는 파일명을 바꾸세요.**
+> `vercel.json` 이 `/gallery/*`·`/venue/*` 에 1년 `immutable` 캐시를 걸어 둡니다.
+> 같은 파일명으로 내용만 바꾸면 이미 방문한 사람은 **최대 1년간 옛 사진을 계속 봅니다.**
+> 교체할 때는 `05.jpg` → `05b.jpg` 처럼 파일명을 바꾸고 `GALLERY_IMAGES` 도 함께 고치세요.
+> (새 사진을 *추가*하는 건 새 파일명이니 아무 문제 없습니다)
+
+### 이미지 최적화 요약
+
+| | 하는 일 |
+| --- | --- |
+| `npm run thumbs` | 그리드용 330w/660w WebP 생성 (`tools/thumbs.mjs`, 로컬 `cwebp` 사용) |
+| `Gallery.tsx` | `<picture>` + `srcset` 으로 화면 크기·배율에 맞는 썸네일 선택, 원본은 라이트박스에서만 |
+| `Venue.tsx` | 구역이 화면에 들어올 때까지 회전·다운로드 정지, 다음 장만 미리 받기 |
+| `vercel.json` | 사진 1년 캐시 (위 경고 참고) |
 
 ---
 
