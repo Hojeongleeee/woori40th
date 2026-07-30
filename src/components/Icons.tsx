@@ -183,6 +183,22 @@ export function WalletIcon(props: IconProps) {
   )
 }
 
+export function PhoneIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M8.2 4.5H5.6A1.6 1.6 0 0 0 4 6.1c0 7.7 6.2 13.9 13.9 13.9a1.6 1.6 0 0 0 1.6-1.6v-2.6l-3.5-1.2-1.7 2a13.6 13.6 0 0 1-5-5l2-1.7z" />
+    </svg>
+  )
+}
+
+export function MessageIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M4 6.5A1.5 1.5 0 0 1 5.5 5h13A1.5 1.5 0 0 1 20 6.5v8a1.5 1.5 0 0 1-1.5 1.5H10l-4 3.2V16h-.5A1.5 1.5 0 0 1 4 14.5z" />
+    </svg>
+  )
+}
+
 /** config 의 icon 키 → 컴포넌트 매핑 */
 export const CORNER_ICONS: Record<string, (p: IconProps) => ReactElement> = {
   camera: CameraIcon,

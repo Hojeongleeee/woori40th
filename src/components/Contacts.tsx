@@ -1,11 +1,14 @@
+import type { ReactNode } from 'react'
 import { CONTACTS, CREDITS, EVENT } from '../config'
+import { MessageIcon, PhoneIcon } from './Icons'
 
 /**
  * 푸터의 문의 연락처 + 함께 준비한 분들.
  *
- * 이름을 누르면 바로 전화가 걸린다 (tel:). 번호를 눈으로 옮겨 적을 일이 없도록
- * 번호는 화면에 늘어놓지 않고 링크 뒤에 둔다 — 대신 스크린리더와
- * 마우스 오버에는 번호가 보이게 aria-label·title 을 붙였다.
+ * 번호를 화면에 그대로 보여 주고, 거는 행동은 사용자가 고르게 둔다.
+ * 이름 전체를 tel: 로 감싸 두면 명단을 훑다가 손가락이 스쳐도 통화 확인창이
+ * 뜬다 — 밤늦게 열어 본 사람에게는 사고에 가깝다. 그래서 이름은 그냥 글자로
+ * 두고, '전화'와 '문자' 버튼을 따로 뒀다.
  */
 export default function Contacts() {
   return (
@@ -17,9 +20,9 @@ export default function Contacts() {
         {CONTACTS.map((group) => (
           <div key={group.role} className="py-3.5">
             <dt className="text-xs font-medium tracking-wide text-cream/45">{group.role}</dt>
-            <dd className="mt-1.5 flex flex-wrap gap-x-2 gap-y-2">
+            <dd className="mt-2 space-y-2">
               {group.people.map((p) => (
-                <PersonLink key={p.phone} {...p} />
+                <PersonRow key={p.phone} {...p} />
               ))}
             </dd>
           </div>
@@ -60,8 +63,8 @@ export default function Contacts() {
   )
 }
 
-/** 기수 · 이름(· 직책) 한 덩어리. 누르면 전화가 걸린다. */
-function PersonLink({
+/** 기수 · 이름(· 직책) + 번호, 그리고 전화 / 문자 버튼. */
+function PersonRow({
   cohort,
   name,
   title,
@@ -72,20 +75,57 @@ function PersonLink({
   title?: string
   phone: string
 }) {
-  const label = `${cohort} ${name}${title ? ` ${title}` : ''} — ${phone}로 전화하기`
+  /* tel:·sms: 는 하이픈이 있어도 대부분 처리하지만, 구형 안드로이드 다이얼러가
+     하이픈을 번호의 일부로 읽는 경우가 있어 숫자만 넘긴다. */
+  const digits = phone.replace(/-/g, '')
+  const who = `${cohort} ${name}${title ? ` ${title}` : ''}`
 
   return (
+    <div className="flex items-center justify-between gap-3">
+      <div className="min-w-0">
+        <p className="flex items-baseline gap-1.5 text-sm">
+          <span className="shrink-0 text-cream/45">{cohort}</span>
+          <span className="font-medium text-cream">{name}</span>
+          {title && <span className="text-xs text-marigold/80">{title}</span>}
+        </p>
+        {/* select-all — 눌러서 한 번에 집히니 번호를 손으로 옮겨 적지 않아도 된다 */}
+        <p className="mt-0.5 select-all text-xs tabular-nums tracking-wide text-cream/50">
+          {phone}
+        </p>
+      </div>
+
+      <div className="flex shrink-0 gap-1.5">
+        <ActionButton href={`tel:${digits}`} label={`${who}에게 전화 걸기`} text="전화">
+          <PhoneIcon className="h-3.5 w-3.5" strokeWidth={1.6} />
+        </ActionButton>
+        <ActionButton href={`sms:${digits}`} label={`${who}에게 문자 보내기`} text="문자">
+          <MessageIcon className="h-3.5 w-3.5" strokeWidth={1.6} />
+        </ActionButton>
+      </div>
+    </div>
+  )
+}
+
+/** 전화 / 문자 — 손가락으로 누를 수 있게 최소 44px 높이를 지킨다. */
+function ActionButton({
+  href,
+  label,
+  text,
+  children,
+}: {
+  href: string
+  label: string
+  text: string
+  children: ReactNode
+}) {
+  return (
     <a
-      href={`tel:${phone.replace(/-/g, '')}`}
+      href={href}
       aria-label={label}
-      title={phone}
-      className="inline-flex items-baseline gap-1.5 border border-cream/15 px-2.5 py-1.5 text-sm transition-colors hover:border-marigold/60 hover:bg-marigold/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marigold"
+      className="inline-flex min-h-[38px] items-center gap-1.5 border border-cream/15 px-2.5 text-xs text-cream/80 transition-colors hover:border-marigold/60 hover:bg-marigold/10 hover:text-cream focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marigold"
     >
-      <span className="text-cream/45">{cohort}</span>
-      <span className="font-medium text-cream underline decoration-marigold/50 decoration-1 underline-offset-4">
-        {name}
-      </span>
-      {title && <span className="text-xs text-marigold/80">{title}</span>}
+      {children}
+      {text}
     </a>
   )
 }
