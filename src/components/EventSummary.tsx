@@ -59,9 +59,9 @@ export default function EventSummary() {
           </dl>
         </Reveal>
 
-        {/* 장소 지도 */}
+        {/* 장소 바로가기 — 위 '장소' 행에 딸린 버튼이라 간격을 좁게 둔다 */}
         <Reveal delay={160}>
-          <VenueMap className="mx-auto mt-10 max-w-md" />
+          <VenueMap className="mx-auto mt-6 max-w-md" />
         </Reveal>
 
         {/* 문의 연락처 + 함께 준비한 분들 */}
