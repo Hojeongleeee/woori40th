@@ -40,7 +40,7 @@ export const MAX_FILLED_PERCENT = 90
  *   (주소를 유지하려면 "배포 관리 → 편집 → 버전: 새 버전" 으로 배포)
  *   주소를 브라우저로 열었을 때 version 이 보이면 최신 코드입니다. */
 export const GOOGLE_SHEET_ENDPOINT =
-  'https://script.google.com/macros/s/AKfycbyZmvlsuJir9TcweY0_Qeip3eCrK7KCXoMfxPOKynXvVNQYl5E7on4Om6H_6n6rWDix/exec'
+  'https://script.google.com/macros/s/AKfycbz-j-1MS40adpnbzyG6qt_I2VZqKN34fCn8qrCCuQekE7ICVRQBwil-EmpyNJi_z1Y-/exec'
 
 /* 엔드포인트 미설정 시 제출을 "성공한 것처럼" 시뮬레이션할지 여부. */
 export const SIMULATE_SUBMIT_WHEN_NO_ENDPOINT = true
@@ -155,7 +155,7 @@ export const EVENT = {
   placeAccess: '1호선 남영역 1번 출구에서 244m',
 
   // 좌석 (장소 여건상 한정)
-  seats: 90,
+  seats: 110,
 
   // 문의
   contactLabel: 'WOORI 40주년 준비위원회',
